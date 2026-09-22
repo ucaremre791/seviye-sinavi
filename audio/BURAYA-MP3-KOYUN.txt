@@ -1,0 +1,14 @@
+Bu klasöre 8 adet MP3 dosyası gelecek:
+
+  ses-testi.mp3
+  dinleme-1.mp3
+  dinleme-2.mp3
+  dinleme-3.mp3
+  dikte-1.mp3
+  dikte-2.mp3
+  dikte-3.mp3
+  dikte-4.mp3
+
+Metinler ve üretim talimatı için SES-METINLERI.md dosyasına bakın.
+Dosyalar yoksa sınav çalışmaya devam eder, ama tarayıcının kendi sesini
+kullanır — her adayda farklı olur.

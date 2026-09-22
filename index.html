@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fbfbfd">
+<title>İngilizce Seviye Sınavı</title>
+<script src="config.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface-2:#f2f2f5; --surface-3:#e7e7ec;
+    --text:#1d1d1f; --text-2:#6e6e73; --text-3:#8e8e93;
+    --line:rgba(0,0,0,.09); --line-2:rgba(0,0,0,.17);
+    --accent:#0071e3; --accent-soft:rgba(0,113,227,.09); --accent-mid:rgba(0,113,227,.18);
+    --alert:#c7361f; --alert-soft:rgba(199,54,31,.10);
+    --ok:#1c7a4a; --warn:#8a6100;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.055);
+    --r-lg:20px; --r-md:14px; --r-sm:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
+      --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
+      --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
+      --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
+      --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
+      --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
+    --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
+    --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
+    --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
+    --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
+    --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+    font-size:17px; line-height:1.55; letter-spacing:-0.011em; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding-inline:20px}
+  .wide{max-width:900px}
+
+  #bar{
+    position:sticky;top:env(safe-area-inset-top, 0px);z-index:30;
+    background:color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid var(--line);
+  }
+  #bar .inner{max-width:720px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px}
+  #barPart{font-size:14px;color:var(--text-2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #clock{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;padding:2px 10px;border-radius:8px}
+  #clock.low{color:var(--alert);background:var(--alert-soft)}
+  #prog{height:2px;background:var(--surface-3)}
+  #progFill{height:100%;width:0;background:var(--accent);transition:width .35s ease}
+
+  h1{font-size:clamp(29px,6.2vw,42px);line-height:1.08;font-weight:600;letter-spacing:-0.033em;margin:0 0 14px;text-wrap:balance}
+  h2{font-size:clamp(23px,4.6vw,30px);line-height:1.15;font-weight:600;letter-spacing:-0.028em;margin:0 0 6px;text-wrap:balance}
+  h3{font-size:19px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px}
+  h4{font-size:15px;font-weight:600;margin:26px 0 10px;color:var(--text-2)}
+  p{margin:0 0 14px}
+  .kicker{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 9px}
+  .sub{color:var(--text-2);margin:0 0 24px}
+  .fine{font-size:14.5px;color:var(--text-2)}
+  section.screen{padding-block:38px 90px}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:24px 22px}
+  .card.quiet{box-shadow:none;background:var(--surface-2);border-color:transparent}
+  .card + .card{margin-top:18px}
+
+  button{
+    font:inherit;font-size:16px;font-weight:500;
+    border:1px solid var(--line-2);background:var(--surface);color:var(--text);
+    padding:11px 20px;border-radius:999px;cursor:pointer;
+    transition:background .15s ease, transform .08s ease, opacity .15s ease;
+  }
+  button:hover{background:var(--surface-2)}
+  button:active{transform:scale(.985)}
+  button:disabled{opacity:.4;cursor:default;transform:none}
+  button.primary{background:var(--accent);border-color:transparent;color:#fff}
+  button.primary:hover{filter:brightness(1.07);background:var(--accent)}
+  button.big{padding:14px 30px;font-size:17px}
+  button.tiny{font-size:13.5px;padding:6px 13px}
+  button.link{border:none;background:none;color:var(--accent);padding:0;font-size:14.5px;text-decoration:underline;text-underline-offset:3px}
+  button.link:hover{background:none;filter:brightness(1.15)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  input[type=text],input[type=tel],input[type=email],input[type=password],input[type=number],textarea{
+    font:inherit;color:var(--text);background:var(--surface);
+    border:1px solid var(--line-2);border-radius:var(--r-sm);padding:10px 12px;width:100%;
+  }
+  textarea{resize:vertical;line-height:1.6;min-height:220px;border-radius:var(--r-md)}
+  input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .field label{font-size:14px;color:var(--text-2)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:520px){.grid2{grid-template-columns:1fr}}
+
+  .qlist{display:flex;flex-direction:column;gap:12px}
+  .q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;scroll-margin-top:80px}
+  .q.answered{border-color:color-mix(in srgb, var(--accent) 40%, var(--line))}
+  .q.flash{animation:flash 1.1s ease}
+  @keyframes flash{0%,100%{background:var(--surface)}30%{background:var(--accent-soft)}}
+  @media (prefers-reduced-motion: reduce){.q.flash{animation:none;outline:2px solid var(--accent)}}
+  .qhead{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+  .qnum{font-size:13px;font-weight:600;color:var(--text-3);font-variant-numeric:tabular-nums;min-width:22px;padding-top:3px}
+  .qtext{flex:1;font-size:16.5px}
+  .qtext .sp{display:block;margin-bottom:1px}
+  .qtext .sp b{font-weight:600;color:var(--text-2);margin-right:5px}
+  .qtext .ask{display:block;margin-top:9px;color:var(--text-2);font-size:15.5px}
+  .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-left:32px}
+  .opts.one{grid-template-columns:1fr}
+  @media (max-width:560px){.opts{grid-template-columns:1fr;padding-left:0}}
+  .opt{
+    display:flex;align-items:center;gap:9px;cursor:pointer;
+    border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 12px;font-size:16px;
+    background:var(--bg);transition:border-color .12s ease, background .12s ease;
+  }
+  .opt:hover{border-color:var(--line-2)}
+  .opt input{accent-color:var(--accent);margin:0;flex:none}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt .ltr{font-weight:600;color:var(--text-3);font-size:13.5px;min-width:14px}
+  .opt.sel .ltr{color:var(--accent)}
+
+  .passage{background:var(--surface-2);border-radius:var(--r-md);padding:20px;font-size:16.5px;line-height:1.95;margin-bottom:16px}
+  .passage p:last-child{margin-bottom:0}
+  .passage .ph{font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;font-weight:600}
+  .sign{
+    border:1.5px solid var(--line-2);border-radius:var(--r-sm);padding:16px 18px;text-align:center;
+    font-size:16.5px;line-height:1.5;background:var(--surface);margin-bottom:12px;
+  }
+  .sign .big{display:block;font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:17px;margin-bottom:5px}
+  .msg{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:12px;font-size:16px}
+  .msg .from{font-size:13px;color:var(--text-3);margin-bottom:5px}
+
+  /* --- cloze gaps: must read unmistakably as a numbered blank --- */
+  .gapno{
+    display:inline-block;min-width:96px;text-align:center;vertical-align:baseline;
+    border:1px dashed var(--accent);border-radius:8px;background:var(--accent-soft);
+    color:var(--accent);font-weight:600;font-size:15px;padding:1px 10px;margin:0 3px;
+    cursor:pointer;transition:background .15s ease;
+  }
+  .gapno:hover{background:var(--accent-mid)}
+  .gapno .n{font-size:11.5px;font-weight:700;opacity:.75;margin-right:5px}
+  .gapno.filled{border-style:solid;background:var(--accent-mid)}
+  .gapno .w{font-style:normal}
+  .gapno .dots{letter-spacing:1px;opacity:.55}
+  .passage.cloze{line-height:2.75}
+  .passage.cloze p{margin-bottom:18px}
+
+  .audio{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface-2);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px}
+  .audio .label{flex:1;min-width:150px;font-size:15px;color:var(--text-2)}
+  .audio .label b{color:var(--text);font-weight:600;display:block;font-size:16px}
+  .plays{font-size:13px;color:var(--text-3);font-variant-numeric:tabular-nums}
+  .wave{display:inline-flex;align-items:flex-end;gap:2px;height:14px;margin-right:9px}
+  .wave i{width:2px;background:currentColor;border-radius:1px;opacity:.55}
+  .wave i:nth-child(1){height:6px} .wave i:nth-child(2){height:12px}
+  .wave i:nth-child(3){height:8px} .wave i:nth-child(4){height:14px}
+  .playing .wave i{animation:w .7s ease-in-out infinite;opacity:1}
+  .wave i:nth-child(2){animation-delay:.12s} .wave i:nth-child(3){animation-delay:.24s} .wave i:nth-child(4){animation-delay:.36s}
+  @keyframes w{0%,100%{height:4px}50%{height:14px}}
+  @media (prefers-reduced-motion: reduce){.wave i{animation:none!important}}
+
+  .dict{font-size:17.5px;line-height:2.15}
+  .dict ol{padding-left:1.4em;margin:0}
+  .dict li{margin-bottom:18px}
+  .dict li:last-child{margin-bottom:0}
+  .dict input{
+    display:inline-block;padding:0 7px 2px;font-size:16.5px;line-height:1.5;width:7.5em;
+    border:none;border-bottom:1.5px solid var(--line-2);border-radius:0;background:transparent;vertical-align:baseline;
+  }
+  .dict input:focus{box-shadow:none;border-bottom-color:var(--accent);background:var(--accent-soft)}
+  .gn{font-size:11px;color:var(--accent);font-weight:700;vertical-align:super;margin:0 2px 0 1px}
+  .dictrow{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+
+  .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r-md) var(--r-md) 0;padding:13px 16px;font-size:15px}
+  .note.warn{border-left-color:var(--alert);background:var(--alert-soft)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;color:var(--text-2);background:var(--surface-2);border-radius:999px;padding:5px 12px}
+  ul.clean{margin:0;padding-left:1.15em}
+  ul.clean li{margin-bottom:7px}
+  ul.clean li:last-child{margin-bottom:0}
+  .footrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px}
+  .footrow .left{flex:1;min-width:120px;font-size:14px;color:var(--text-2)}
+
+  .levelbox{text-align:center;padding:38px 20px}
+  .levelbig{font-size:76px;font-weight:600;letter-spacing:-0.045em;line-height:1;margin-bottom:10px}
+  .levelname{font-size:19px;color:var(--text-2)}
+
+  .adminbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+  .adminbar .grow{flex:1;min-width:140px}
+  table.rows{width:100%;border-collapse:collapse;font-size:14.5px}
+  table.rows th,table.rows td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.rows th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);font-weight:600;white-space:nowrap}
+  table.rows td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.rows input[type=number]{width:70px;padding:5px 7px;font-size:14px;text-align:right}
+  table.rows tr.open{background:var(--surface-2)}
+  .lvltag{display:inline-block;font-weight:600;font-size:13px;padding:3px 9px;border-radius:7px;background:var(--surface-2);white-space:nowrap}
+  .lvltag.set{background:var(--accent-soft);color:var(--accent)}
+  .flag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--alert-soft);color:var(--alert);margin-left:6px}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  .detail{background:var(--surface-2);border-radius:var(--r-md);padding:18px 20px;margin:4px 0 10px}
+  .detail h5{margin:0 0 10px;font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);font-weight:600}
+  .detail .block + .block{margin-top:22px}
+  .drow{display:flex;align-items:center;gap:12px;padding:5px 0;font-size:14.5px}
+  .drow .nm{min-width:132px}
+  .drow .bar{flex:1;height:7px;background:var(--surface-3);border-radius:4px;overflow:hidden;min-width:60px}
+  .drow .bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+  .drow .bar i.low{background:var(--alert)}
+  .drow .bar i.mid{background:var(--warn)}
+  .drow .vl{min-width:84px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text-2)}
+  .dfacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .dfacts span{font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--text-2)}
+  .verdict{background:var(--surface);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 15px;font-size:14.5px;margin-top:6px}
+  .wbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;margin-top:8px;font-size:15px;white-space:pre-wrap;line-height:1.6}
+
+  .toast{
+    position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(24px + env(safe-area-inset-bottom, 0px));z-index:60;
+    background:var(--text);color:var(--bg);font-size:15px;padding:11px 20px;border-radius:999px;
+    box-shadow:0 8px 30px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .25s ease;
+    max-width:88vw;text-align:center;
+  }
+  .toast.show{opacity:1}
+  .footlink{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);text-align:center}
+</style>
+<style>
+  /* standalone page needs the few resets the embedded version got for free */
+  html{-webkit-text-size-adjust:100%}
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="bar" hidden>
+  <div class="inner">
+    <span id="barPart">Bölüm 1 / 6</span>
+    <span id="clock">08:00</span>
+  </div>
+  <div id="prog"><div id="progFill"></div></div>
+</div>
+
+<main class="wrap" id="main">
+
+<!-- ===================== WELCOME ===================== -->
+<section class="screen" id="s-welcome">
+  <p class="kicker" id="brand">Seviye tespit · A1 – A2 – B1</p>
+  <h1>İngilizce Seviye Sınavı</h1>
+  <p class="sub">Altı bölüm, 38 dakika. Sonunda seviyeniz ekranda görünür.</p>
+
+  <div class="chips" style="margin-bottom:26px">
+    <span class="chip">64 soru + 1 yazma</span>
+    <span class="chip">Dinleme ve dikte sesli</span>
+    <span class="chip">CEFR A1 – B1</span>
+  </div>
+
+  <div class="card">
+    <h3>Bilgileriniz</h3>
+    <div class="field">
+      <label for="fName">Ad Soyad</label>
+      <input type="text" id="fName" autocomplete="name" placeholder="Örn. Elif Yılmaz">
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label for="fPhone">Telefon <span style="color:var(--text-3)">(isteğe bağlı)</span></label>
+        <input type="tel" id="fPhone" autocomplete="tel" placeholder="05xx xxx xx xx">
+      </div>
+      <div class="field">
+        <label for="fMail">E-posta <span style="color:var(--text-3)">(isteğe bağlı)</span></label>
+        <input type="email" id="fMail" autocomplete="email" placeholder="ornek@eposta.com">
+      </div>
+    </div>
+    <div class="field">
+      <label for="fGroup">Grup / kayıt kodu <span style="color:var(--text-3)">(isteğe bağlı)</span></label>
+      <input type="text" id="fGroup" placeholder="Örn. 2026-Güz">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Ses kontrolü</h3>
+    <p class="fine" style="margin-bottom:14px">4. ve 5. bölümde İngilizce kayıtlar dinlersiniz. Kulaklık takın ve aşağıdaki düğmeyle sesin geldiğini doğrulayın.</p>
+    <div class="audio" style="margin-bottom:0">
+      <div class="label"><b>Ses testi</b><span id="testState">Kısa bir İngilizce cümle</span></div>
+      <button id="btnTest" type="button"><span class="wave"><i></i><i></i><i></i><i></i></span>Dinle</button>
+    </div>
+  </div>
+
+  <div class="card quiet">
+    <h3>Kurallar</h3>
+    <ul class="clean fine">
+      <li>Her bölümün kendi süresi vardır; süre dolunca sonraki bölüme otomatik geçilir.</li>
+      <li>Bölümler sırayla yapılır, tamamlanan bölüme geri dönülemez.</li>
+      <li><strong>Emin değilseniz boş bırakın.</strong> Rastgele işaretlemek yerine boş bırakmanız, seviyenizin doğru belirlenmesine yardım eder.</li>
+      <li>Bir şıkkı işaretledikten sonra fikrinizi değiştirirseniz, <strong>aynı şıkka tekrar basın</strong> — seçiminiz kalkar ve soru boş kalır.</li>
+      <li>Sözlük, çeviri aracı veya başka bir sekme kullanmayın.</li>
+      <li>Her kaydı en fazla <strong>2 kez</strong> dinleyebilirsiniz. Kayıt başladıktan sonra sonuna kadar çalar.</li>
+      <li>Sayfa kapanırsa aynı bağlantıdan kaldığınız yerden devam edersiniz.</li>
+    </ul>
+  </div>
+
+  <div class="footrow">
+    <span class="left" id="resumeNote"></span>
+    <button class="primary big" id="btnStart" type="button">Sınavı başlat</button>
+  </div>
+
+</section>
+
+<!-- ===================== PART 1 ===================== -->
+<section class="screen" id="s-p1" hidden>
+  <p class="kicker">Part 1 · 20 soru · 8 dakika</p>
+  <h2>Use of English</h2>
+  <p class="sub">Two parts: first the correct form, then what the speaker means.</p>
+  <h4>Part 1A — Form. Complete each dialogue.</h4>
+  <div class="qlist" id="q-p1a"></div>
+  <h4>Part 1B — Meaning. What does the second speaker mean?</h4>
+  <div class="qlist" id="q-p1b"></div>
+  <div class="footrow"><span class="left" id="c-p1"></span><button class="primary" data-next="1" type="button">Bölüm 2'ye geç</button></div>
+</section>
+
+<!-- ===================== PART 2 ===================== -->
+<section class="screen" id="s-p2" hidden>
+  <p class="kicker">Part 2 · 12 soru · 8 dakika</p>
+  <h2>Reading</h2>
+  <p class="sub">Read each notice, message and text, then choose the best answer.</p>
+
+  <div class="sign">
+    <span class="big">Opening hours</span>
+    Monday – Friday &nbsp;9:00 – 18:00<br>Saturday &nbsp;10:00 – 14:00<br>Sunday &nbsp;closed
+  </div>
+  <div class="qlist" id="q-p2n0"></div>
+
+  <div class="sign" style="margin-top:18px"><span class="big">Please do not feed the birds</span></div>
+  <div class="qlist" id="q-p2nb"></div>
+
+  <div class="sign" style="margin-top:18px"><span class="big">Lift out of order</span>Please use the stairs at the end of the corridor.</div>
+  <div class="qlist" id="q-p2n1"></div>
+
+  <div class="msg" style="margin-top:18px">
+    <div class="from">Message to Can, 14:20</div>
+    Stuck in traffic — sorry! Start the meeting without me. I'll join at about three.
+  </div>
+  <div class="qlist" id="q-p2n2"></div>
+
+  <div class="passage" style="margin-top:24px;line-height:1.68">
+    <div class="ph">Text A</div>
+    <p><strong>From:</strong> Deniz Aydın, Librarian<br><strong>To:</strong> All students<br><strong>Subject:</strong> Changes in the library</p>
+    <p>Dear students,</p>
+    <p>From Monday 5 October the library will open at 8:00 in the morning, one hour earlier than before. It will close at 20:00 from Monday to Friday and at 17:00 on Saturdays. The library is closed on Sundays.</p>
+    <p>You can borrow up to four books for two weeks. If you return a book late, you pay 5 lira for each day. Please remember that the study rooms on the second floor are only for group work. If you want to study alone, use the quiet area on the first floor.</p>
+    <p>Best wishes,<br>Deniz</p>
+  </div>
+  <div class="qlist" id="q-p2a"></div>
+
+  <div class="passage" style="margin-top:24px;line-height:1.68">
+    <div class="ph">Text B</div>
+    <p>Every Saturday morning, a group of volunteers meets in the park near my house. They arrive at eight o'clock with gloves and plastic bags, and for two hours they collect the rubbish that has been left behind during the week. Nobody pays them. They do it because they got tired of complaining.</p>
+    <p>The group started three years ago with four neighbours and a page on social media. Today more than sixty people take part, although never all on the same day. The organiser, Melis, says the hardest part was not finding volunteers but persuading the local council to empty the bins more often. That took eleven months of emails.</p>
+    <p>What surprises visitors most is how little rubbish there is now. When people see a clean park, they are far less likely to drop anything in it. Melis calls this the real result: not the bags they fill, but the ones they no longer need to.</p>
+  </div>
+  <div class="qlist" id="q-p2b"></div>
+
+  <div class="footrow"><span class="left" id="c-p2"></span><button class="primary" data-next="2" type="button">Bölüm 3'e geç</button></div>
+</section>
+
+<!-- ===================== PART 3 ===================== -->
+<section class="screen" id="s-p3" hidden>
+  <p class="kicker">Part 3 · 10 soru · 5 dakika</p>
+  <h2>Cloze</h2>
+  <p class="sub">Each numbered box in the text is a gap. Choose the best word for it below — your choice appears in the text.</p>
+
+  <div class="passage cloze" id="clozeTextA"></div>
+  <div class="qlist" id="q-p3a"></div>
+
+  <div class="passage cloze" id="clozeTextB" style="margin-top:26px"></div>
+  <div class="qlist" id="q-p3b"></div>
+
+  <div class="footrow"><span class="left" id="c-p3"></span><button class="primary" data-next="3" type="button">Bölüm 4'e geç</button></div>
+</section>
+
+<!-- ===================== PART 4 ===================== -->
+<section class="screen" id="s-p4" hidden>
+  <p class="kicker">Part 4 · 8 soru · 7 dakika</p>
+  <h2>Listening</h2>
+  <p class="sub">Read the questions first, then play each recording. You may play each recording <strong>twice</strong>. Each recording plays to the end.</p>
+
+  <div class="audio" id="a-r0">
+    <div class="label"><b>Recording 1</b>A museum announcement</div>
+    <span class="plays" id="p-r0">2 hak</span>
+    <button type="button" data-audio="r0"><span class="wave"><i></i><i></i><i></i><i></i></span>Dinle</button>
+  </div>
+  <div class="qlist" id="q-p4z"></div>
+
+  <div class="audio" id="a-r1" style="margin-top:24px">
+    <div class="label"><b>Recording 2</b>A phone message</div>
+    <span class="plays" id="p-r1">2 hak</span>
+    <button type="button" data-audio="r1"><span class="wave"><i></i><i></i><i></i><i></i></span>Dinle</button>
+  </div>
+  <div class="qlist" id="q-p4a"></div>
+
+  <div class="audio" id="a-r2" style="margin-top:24px">
+    <div class="label"><b>Recording 3</b>Someone talks about moving city</div>
+    <span class="plays" id="p-r2">2 hak</span>
+    <button type="button" data-audio="r2"><span class="wave"><i></i><i></i><i></i><i></i></span>Dinle</button>
+  </div>
+  <div class="qlist" id="q-p4b"></div>
+
+  <p class="fine" style="margin-top:18px">Ses gelmiyor mu? Cihaz sesini kontrol edip tekrar deneyin — çalmayan bir deneme hakkınızdan düşmez.</p>
+  <div class="footrow"><span class="left" id="c-p4"></span><button class="primary" data-next="4" type="button">Bölüm 5'e geç</button></div>
+</section>
+
+<!-- ===================== PART 5 ===================== -->
+<section class="screen" id="s-p5" hidden>
+  <p class="kicker">Part 5 · 14 boşluk · 4 dakika</p>
+  <h2>Dictation</h2>
+  <p class="sub">Play each sentence and write the missing words. Two plays per sentence. Spelling counts.</p>
+  <div class="card"><div class="dict" id="dict"></div></div>
+  <div class="footrow"><span class="left" id="c-p5"></span><button class="primary" data-next="5" type="button">Bölüm 6'ya geç</button></div>
+</section>
+
+<!-- ===================== PART 6 ===================== -->
+<section class="screen" id="s-p6" hidden>
+  <p class="kicker">Part 6 · 1 görev · 6 dakika</p>
+  <h2>Writing</h2>
+  <div class="card" style="margin-bottom:18px">
+    <h3 style="margin-bottom:10px">Write about a person in your family, or a close friend.</h3>
+    <ul class="clean fine">
+      <li>Who is this person?</li>
+      <li>What is he or she like?</li>
+      <li>Why is this person important to you?</li>
+    </ul>
+    <p class="fine" style="margin:12px 0 0">Write as much as you can. Short, simple sentences are fine.</p>
+  </div>
+  <textarea id="writing" placeholder="Write 50–120 words…" aria-label="Writing task"></textarea>
+  <p class="fine" style="margin-top:8px"><span id="wc">0</span> kelime</p>
+  <div class="footrow"><span class="left"></span><button class="primary" data-next="6" type="button">Sınavı bitir</button></div>
+</section>
+
+<!-- ===================== RESULT ===================== -->
+<section class="screen" id="s-result" hidden>
+  <p class="kicker">Sonuç</p>
+  <h2 id="rHead">Sınav tamamlandı</h2>
+  <p class="sub">Teşekkür ederiz. Sonucunuz kaydedildi.</p>
+  <div class="card levelbox">
+    <p class="fine" style="margin-bottom:6px">Ortalama seviyeniz</p>
+    <div class="levelbig" id="rLevel">A2</div>
+    <div class="levelname" id="rName2">Elementary</div>
+  </div>
+  <p class="fine" id="rSaving" style="margin-top:18px;text-align:center" hidden></p>
+  <p class="fine" style="margin-top:12px;text-align:center">Yazma bölümünüz öğretmen tarafından okunduktan sonra seviyeniz kesinleşir.</p>
+  <p class="fine" id="rContact" style="margin-top:12px;text-align:center;color:var(--text-3)"></p>
+  <div class="footrow" style="justify-content:center">
+    <button id="btnAgain" type="button">Yeni sınav başlat</button>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ===================== ITEM BANK =====================
+   Levels are marked per item (1=A1, 2=A2, 3=B1, 4=ceiling) and used
+   for the per-level diagnostic in the admin panel.                   */
+
+/* Part 1A — Form focus (Oxford Placement Test, Part 1 style) */
+var P1A = [
+ [["Where ______ you from?","I'm from Bursa."],["am","is","be","are"]],
+ [["Does Ayşe have a big family?","Yes, she ______ a brother and two sisters."],["have","has","is","are"]],
+ [["What's your sister's name?","______ name is Zeynep."],["Hers","She","Her","His"]],
+ [["Who's that in the photo?","My sister. ______ works at the city hospital."],["He","It","She","Her"]],
+ [["Can I have some milk?","Sorry, there ______ any left."],["isn't","aren't","don't","not"]],
+ [["Have you ever been to Ankara?","Yes, I ______ there last summer."],["go","have gone","was going","went"]],
+ [["Which bag should I buy?","Take this one. It's ______ than the other."],["cheaper","cheap","cheapest","more cheap"]],
+ [["Do I really need a helmet?","Yes, you ______ wear one. It's the law."],["can","might","must","could"]],
+ [["You look exhausted.","I know. I ______ go to bed early tonight."],["going to","'m going to","will to","am go"]],
+ [["How long have you known Selin?","She's been my best friend ______ ten years."],["since","during","ago","for"]],
+ [["Shall we still go on Sunday?","If it ______, we'll cancel."],["rains","will rain","rained","is raining"]],
+ [["Do you want to go out tonight?","I'd rather ______ at home, actually."],["staying","to stay","stay","stayed"]],
+ [["When did the letter arrive?","It ______ two days ago."],["sent","was sent","has sent","is sending"]],
+ [["What did the officer ask you?","He asked me where I ______ the previous night."],["had been","have been","was being","been"]]
+];
+var L1A = [1,1,1,1,1, 2,2,2,2,2, 3,3,3,3];
+
+/* Part 1B — Meaning focus (Oxford Placement Test, Part 2 style) */
+var P1B = [
+ [["Shall we meet at six?","Could we make it a bit later?"],"What does the second speaker want?",
+  ["To meet before six.","To meet after six.","To cancel the meeting."]],
+ [["Do you want to come to the concert?","I'd love to, but I'm working that night."],"The second speaker is",
+  ["accepting the invitation.","not sure yet.","refusing politely."]],
+ [["How was the new restaurant?","Well, the bread was nice."],"What does the second speaker think of it?",
+  ["It was excellent.","It was disappointing.","It was too expensive."]],
+ [["I was thinking of taking the train.","You could, but the bus gets there in half the time."],"The second speaker is suggesting that the first should",
+  ["take the bus.","take the train.","not travel at all."]],
+ [["Did you finish the report?","I'd have finished it if the system hadn't crashed."],"The report",
+  ["is finished.","was never started.","is not finished."]],
+ [["Everyone says the new manager is difficult.","Let's just say I've worked with worse."],"The second speaker thinks the manager is",
+  ["not as bad as people say.","the worst he has worked with.","very easy to work with."]]
+];
+var L1B = [2,2,3,3,3,4];
+
+/* Part 2 — Reading */
+var P2N0 = [["When is the shop closed?",["On Saturday morning.","On Sunday.","On Friday evening."]]];
+var P2NB = [["What must you not do?",["Give food to the birds.","Touch the birds.","Take photos of the birds."]]];
+var P2N1 = [["What does the notice tell you?",["The lift is being cleaned today.","You cannot use the lift.","The stairs are closed."]]];
+var P2N2 = [["What should Can do?",["Wait until the sender arrives.","Move the meeting to three o'clock.","Begin the meeting without the sender."]]];
+var P2A = [
+ ["From 5 October, the library opens",["one hour later.","one hour earlier.","at 20:00.","at 17:00."]],
+ ["A student who returns a book late must",["pay 5 lira for each day.","pay 5 lira in total.","borrow only two books.","wait two weeks."]],
+ ["Students who want to study alone should go to",["the second floor.","the café.","the entrance.","the first floor."]]
+];
+var P2B = [
+ ["Who pays the volunteers?",["The local council.","Melis.","No one.","The visitors."]],
+ ["How did the group begin?",["With money from the council.","With four neighbours and a social media page.","With sixty volunteers.","With a newspaper article."]],
+ ["How long did it take to persuade the council?",["Two hours.","Three years.","Eleven months.","Two weeks."]],
+ ["What was the most difficult thing for the group?",["Finding people to help.","Getting the council to act.","Paying for gloves and bags.","Starting a social media page."]],
+ ["According to Melis, the most important result is that",["more than sixty people now help.","the council empties the bins.","the park is cleaned every Saturday.","people drop less rubbish."]]
+];
+var L2 = [1,1,2,2, 2,2,2, 3,3,3,3,3];
+var PTS2 = [1,1,1,1, 2,2,2, 2,2,2,2,2];
+
+/* Part 3 — Multiple-choice cloze (Linguaskill / Oxford style) */
+var CLOZE_A =
+ "<p><strong>The bakery</strong></p>" +
+ "<p>My name is Aylin and I {1} in a small town near Izmir. Every morning I {2} up at six o'clock and walk to the bakery where I work. The bakery {3} at seven, so the streets are still quiet when I arrive. I like my job because the customers {4} friendly and they always say good morning. On Sundays the bakery is closed, {5} I stay at home and read.</p>";
+var CLOZE_B =
+ "<p><strong>Why teenagers can't get up</strong></p>" +
+ "<p>Most teenagers find it hard to get out of bed in the morning. This is not simply because they go to bed late. During adolescence the body clock shifts, so a teenager naturally feels sleepy {6} later than a younger child. Schools that start at eight o'clock are therefore asking students to concentrate at a time when their bodies have not really woken up.</p>" +
+ "<p>A number of schools in the United States have {7} their start time by an hour. Attendance improved, and so did grades in the first lessons of the day.</p>" +
+ "<p>{8} this, most schools have not followed. Changing the timetable affects buses, sports fixtures and parents who leave for work early, and these practical problems are not easy {9}. Head teachers also worry that students {10} simply spend the extra hour looking at their phones.</p>";
+var P3 = [
+ ["Gap 1",["lives","live","living","am live"]],
+ ["Gap 2",["gets","getting","get","got"]],
+ ["Gap 3",["open","is opening","opened","opens"]],
+ ["Gap 4",["are","is","be","am"]],
+ ["Gap 5",["because","so","but","or"]],
+ ["Gap 6",["very","too","much","so"]],
+ ["Gap 7",["delayed","late","slow","waited"]],
+ ["Gap 8",["Although","However","Because","Despite"]],
+ ["Gap 9",["to solve","solving","solved","solve"]],
+ ["Gap 10",["must","might","should","need"]]
+];
+var L3 = [1,2,2,2,2, 3,3,4,3,3];
+
+/* Part 4 — Listening */
+var P4Z = [
+ ["What time does the museum close?",["At three o'clock.","At four o'clock.","At five o'clock.","At ten o'clock."]],
+ ["How much is a ticket?",["Ten lira.","Twenty lira.","Twenty-five lira.","Fifty lira."]]
+];
+var P4A = [
+ ["What time will they meet?",["5:15","5:30","6:00","6:15"]],
+ ["Where will they meet?",["Inside the cinema.","At Tom's house.","At the station.","Outside the main entrance."]],
+ ["What has Tom already done?",["Booked a table.","Bought the tickets.","Called Emma's sister.","Changed the film."]]
+];
+var P4B = [
+ ["Why did the speaker almost refuse the job?",["The salary was too low.","He knew nobody in the city.","The flat was too small.","The winters were too cold."]],
+ ["What made him change his mind?",["The weather.","His family.","The cost of housing.","The university."]],
+ ["How does he feel about the move now?",["He regrets it.","He is not sure.","He would like to go back.","He is glad he moved."]]
+];
+var L4 = [1,1, 2,2,2, 3,3,3];
+
+var REC0 = [
+ "Good morning, and welcome to the city museum.",
+ "The museum is open from ten o'clock in the morning until five o'clock in the afternoon.",
+ "A ticket costs twenty lira.",
+ "The cafe is on the first floor. Thank you."
+];
+var REC1 = [
+ "Hi Emma, it's Tom. I'm calling about Saturday.",
+ "I know we said we'd meet at the cinema at six, but the film actually starts at half past five, not six.",
+ "So can we meet at quarter past five instead, outside the main entrance?",
+ "And don't worry about the tickets, I bought them online this morning.",
+ "Call me back if there's a problem. Bye!"
+];
+var REC2 = [
+ "So I moved to Eskisehir about two years ago.",
+ "I'd been offered a job there, and honestly I nearly said no. I didn't know anyone in the city, and my family are all in Antalya.",
+ "What changed my mind was the rent. In Antalya I was paying more than half my salary for a small flat. In Eskisehir I found somewhere twice the size for a third of the price.",
+ "The first winter was hard, much colder than I expected, and I did feel lonely at the beginning.",
+ "But there are a lot of students here, so there's always something happening, and I've made more friends in two years than I did in ten years at home.",
+ "Would I go back? Probably not."
+];
+
+/* Part 5 — Partial dictation (a core Pearson Versant task type) */
+var DICT = [
+ {audio:"My brother works in a small office near the station.",
+  parts:["My brother ",{g:1}," in a ",{g:2}," office near the ",{g:3},"."]},
+ {audio:"We usually have breakfast at half past seven on weekdays.",
+  parts:["We ",{g:4}," have ",{g:5}," at half past ",{g:6}," on ",{g:7},"."]},
+ {audio:"Although it was raining heavily, the match was not cancelled.",
+  parts:[{g:8}," it was ",{g:9}," ",{g:10},", the match was not ",{g:11},"."]},
+ {audio:"If I had more time, I would learn another language.",
+  parts:["If I ",{g:12}," more time, I ",{g:13}," learn another ",{g:14},"."]}
+];
+var L5 = [1,1,1, 2,2,2,2, 3,3,3,3, 3,3,3];
+
+var PARTS = [
+ {id:"p1", secs:480, label:"Bölüm 1 · Use of English", items:20, max:20},
+ {id:"p2", secs:480, label:"Bölüm 2 · Reading",        items:12, max:20},
+ {id:"p3", secs:300, label:"Bölüm 3 · Cloze",          items:10, max:10},
+ {id:"p4", secs:420, label:"Bölüm 4 · Listening",      items:8,  max:16},
+ {id:"p5", secs:240, label:"Bölüm 5 · Dictation",      items:14, max:14},
+ {id:"p6", secs:360, label:"Bölüm 6 · Writing",        items:0,  max:20}
+];
+var SECLABEL = {p1:"Use of English", p2:"Reading", p3:"Cloze", p4:"Listening", p5:"Dictation"};
+var SECMAX   = {p1:20, p2:20, p3:10, p4:16, p5:14};
+var AUTO_MAX = 80, WRITE_MAX = 20;
+var LEVELS = {p1: L1A.concat(L1B), p2: L2, p3: L3, p4: L4, p5: L5};
+var PTS    = {p1: null, p2: PTS2, p3: null, p4: null, p5: null};  /* null = flat */
+function ptsOf(bank, i){                                    /* i is 1-based */
+  if(bank === "p2") return PTS2[i-1];
+  if(bank === "p4") return 2;
+  return 1;
+}
+var LEVELNAME = {"A1":"Beginner","A2":"Elementary","B1":"Intermediate","B1+":"Intermediate +"};
+
+var KEYBLOB = "CFYBHBAKaRRpUkBBMVZdD3ESHhRuUkBBMlZdD3YSHhRsUkBBMFZdD3ASHhRpUkBBMlZdD3ESHhRvUkBBMlZdD3ASHhRuUkBBMVZdD3MSHhRuUkBBMlYsARBAABQXK04hUVhTbBAcEHQPXE4gUVhTbxAcEHcPXE4nUVhTbhAcEHQPXE4gUVhTbxAcEHIPLUBBA0dTF2kScBQBUi9BX1Y1Dx4ScxQBUi5BX1YyDx4ScxQBUihBX1YwDx4ScBRwXE4TR1ZLdhBzEBoPMk5PUTVTARB0EBoPMk5PUTZTARBzEBoPNE4+X1YBGBAKaRRaHx4IAFZdD0FdU1pBUkBBAAAQWVtfXBQBUhkQBhUdQUsSHhRPAgkCGBIQXkYSHhReFRoGHVZdD0VVV11JERUQUVhTTF5EWllYFwRBX1YDTFteW1hKUkBBGxEQW1tcSxQBUg8CHRcUQV5VVkpOEQIAFhgUSRAcEF5MFE5PUQMeWF5UEBoPHA0NFAEQSlcSb0s=";
+function unlock(b){
+  var salt="stq-2026-plc", bin=atob(b), out="";
+  for(var i=0;i<bin.length;i++) out+=String.fromCharCode(bin.charCodeAt(i)^salt.charCodeAt(i%salt.length));
+  return JSON.parse(out);
+}
+var KEY = unlock(KEYBLOB);
+
+/* ===================== STATE ===================== */
+
+var SKEY = "stq2026.state", OUTBOX = "stq2026.outbox";
+var CFG = window.STQ_CONFIG || {};
+function blank(){
+  return {name:"",phone:"",mail:"",group:"",started:0,part:-1,ends:0,
+          a:{p1:{},p2:{},p3:{},p4:{},p5:{}}, writing:"", plays:{}, done:false};
+}
+var ST = blank();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+function save(){ lsSet(SKEY, JSON.stringify(ST)); }
+function loadState(){
+  var raw=lsGet(SKEY); if(!raw) return null;
+  try{ var o=JSON.parse(raw); return (o && typeof o==="object") ? o : null; }catch(e){ return null; }
+}
+/* ---- sending results to Supabase, with a local outbox for bad connections ---- */
+/* Supabase shows the full endpoint (".../rest/v1/") on its Data API page, so
+   accept that too and reduce it to the project URL. */
+function baseUrl(u){
+  return String(u||"").trim()
+    .replace(/\/+$/,"")
+    .replace(/\/rest\/v1$/i,"")
+    .replace(/\/auth\/v1$/i,"")
+    .replace(/\/+$/,"");
+}
+function configured(){
+  var u=baseUrl(CFG.SUPABASE_URL);
+  return !!(u && CFG.SUPABASE_ANON_KEY && u.indexOf("http")===0 && CFG.SUPABASE_ANON_KEY.length>20);
+}
+function post(rec){
+  if(!configured()) return Promise.reject(new Error("config"));
+  return fetch(baseUrl(CFG.SUPABASE_URL)+"/rest/v1/results",{
+    method:"POST",
+    headers:{ "apikey":CFG.SUPABASE_ANON_KEY,
+              "Authorization":"Bearer "+CFG.SUPABASE_ANON_KEY,
+              "Content-Type":"application/json",
+              "Prefer":"return=minimal" },
+    body:JSON.stringify(rec)
+  }).then(function(r){ if(!r.ok) throw new Error("http "+r.status); return true; });
+}
+function outbox(){ try{ var a=JSON.parse(lsGet(OUTBOX)||"[]"); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function queue(rec){ var q=outbox(); q.push(rec); lsSet(OUTBOX,JSON.stringify(q)); }
+function flushOutbox(){
+  var q=outbox();
+  if(!q.length || !configured()) return;
+  post(q[0]).then(function(){
+    var cur=outbox(); cur.shift(); lsSet(OUTBOX,JSON.stringify(cur));
+    flushOutbox();
+  }).catch(function(){});
+}
+
+/* ===================== HELPERS ===================== */
+
+function $(id){ return document.getElementById(id); }
+function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+var toastT;
+function toast(msg){
+  var t=$("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove("show"); },3200);
+}
+function pad(n){ return (n<10?"0":"")+n; }
+function mmss(s){ if(s<0)s=0; return pad(Math.floor(s/60))+":"+pad(s%60); }
+function norm(s){ return String(s||"").toLowerCase().trim().replace(/[‘’]/g,"'").replace(/[^a-z']/g,""); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function hash7(s){
+  var h=5381; for(var i=0;i<s.length;i++) h=(((h<<5)+h)+s.charCodeAt(i))>>>0;
+  var t=h.toString(36).toUpperCase(); while(t.length<7) t="0"+t; return t.slice(-7);
+}
+
+/* ===================== AUDIO =====================
+   Recordings are MP3 files, so every candidate on every device hears exactly
+   the same thing. If a file is missing the page falls back to the browser's
+   own speech engine, so the exam still runs before the recordings are made. */
+
+var CLIPS = {
+  r0:"audio/dinleme-1.mp3", r1:"audio/dinleme-2.mp3", r2:"audio/dinleme-3.mp3",
+  d1:"audio/dikte-1.mp3",   d2:"audio/dikte-2.mp3",
+  d3:"audio/dikte-3.mp3",   d4:"audio/dikte-4.mp3",
+  test:"audio/ses-testi.mp3"
+};
+var TTS_LINES = {
+  r0:REC0, r1:REC1, r2:REC2,
+  d1:[DICT[0].audio], d2:[DICT[1].audio], d3:[DICT[2].audio], d4:[DICT[3].audio],
+  test:["This is a sound check. If you can hear this sentence clearly, you are ready to begin."]
+};
+var TTS_RATE = { r0:0.88, r1:0.94, r2:0.98, d1:0.88, d2:0.88, d3:0.88, d4:0.88, test:0.95 };
+
+var AU = { busy:false, btn:null, key:null, onDone:null };
+var CLIP_EL = {}, CLIP_OK = {};
+
+function initClips(){
+  Object.keys(CLIPS).forEach(function(k){
+    var a=new Audio();
+    a.preload="auto";
+    a.addEventListener("canplaythrough",function(){ CLIP_OK[k]=true; });
+    a.addEventListener("error",function(){ CLIP_OK[k]=false; });
+    try{ a.src=CLIPS[k]; }catch(e){ CLIP_OK[k]=false; }
+    CLIP_EL[k]=a;
+  });
+}
+
+var PLAY_HTML="<span class='wave'><i></i><i></i><i></i><i></i></span>Dinle";
+var BUSY_HTML="<span class='wave'><i></i><i></i><i></i><i></i></span>Çalıyor…";
+function setPlayBtn(btn,playing){
+  if(!btn) return;
+  btn.innerHTML = playing ? BUSY_HTML : PLAY_HTML;
+  btn.classList.toggle("playing",playing);
+}
+
+var TTS = { keep:null };
+function stopAudio(){
+  Object.keys(CLIP_EL).forEach(function(k){
+    var a=CLIP_EL[k];
+    if(a && !a.paused){ try{ a.pause(); }catch(e){} }
+  });
+  try{ if(window.speechSynthesis&&(speechSynthesis.speaking||speechSynthesis.pending)) speechSynthesis.cancel(); }catch(e){}
+  if(TTS.keep){ clearInterval(TTS.keep); TTS.keep=null; }
+  var cb=AU.onDone;
+  AU.busy=false; setPlayBtn(AU.btn,false); AU.btn=null; AU.key=null; AU.onDone=null;
+  refreshPlayLabels();
+  if(cb) cb(false);
+}
+
+/* --- browser voices, used only as a fallback --- */
+var SPK={a:null,b:null,primed:false};
+function refreshVoices(){
+  var all=[];
+  try{ all=(window.speechSynthesis&&speechSynthesis.getVoices)?(speechSynthesis.getVoices()||[]):[]; }catch(e){}
+  var en=all.filter(function(v){ return /^en[-_]/i.test(v.lang||""); });
+  var gb=en.filter(function(v){ return /^en[-_]GB/i.test(v.lang); });
+  var us=en.filter(function(v){ return /^en[-_]US/i.test(v.lang); });
+  var pool=gb.concat(us,en);
+  SPK.a=pool[0]||null; SPK.b=null;
+  for(var i=0;i<pool.length;i++){ if(pool[i]!==SPK.a){ SPK.b=pool[i]; break; } }
+}
+if(window.speechSynthesis){
+  refreshVoices();
+  try{ speechSynthesis.addEventListener("voiceschanged",refreshVoices); }
+  catch(e){ speechSynthesis.onvoiceschanged=refreshVoices; }
+  setTimeout(refreshVoices,300); setTimeout(refreshVoices,1500);
+}
+function primeAudio(){
+  if(SPK.primed) return;
+  SPK.primed=true;
+  try{ var u=new SpeechSynthesisUtterance(" "); u.volume=0; u.lang="en-GB"; speechSynthesis.speak(u); }catch(e){}
+  Object.keys(CLIP_EL).forEach(function(k){
+    var a=CLIP_EL[k];
+    try{ a.muted=true; var p=a.play(); if(p&&p.then) p.then(function(){ a.pause(); a.currentTime=0; a.muted=false; },
+                                                            function(){ a.muted=false; }); }catch(e){ a.muted=false; }
+  });
+}
+
+/* --- one entry point for every clip --- */
+function playKey(key, btn, onDone){
+  if(AU.busy || (key!=="test" && playsLeft(key)<=0)) return;
+  AU.busy=true; AU.btn=btn; AU.key=key; AU.onDone=onDone||null;
+  setPlayBtn(btn,true); refreshPlayLabels();
+  if(CLIP_OK[key]===false) playTTS(key,btn);
+  else playFile(key,btn);
+}
+
+function release(ok){
+  var cb=AU.onDone;
+  AU.busy=false; setPlayBtn(AU.btn,false); AU.btn=null; AU.key=null; AU.onDone=null;
+  refreshPlayLabels();
+  if(cb) cb(ok);
+}
+function refund(key,msg){
+  if(key && key!=="test" && ST.plays[key]>0){ ST.plays[key]-=1; save(); }
+  release(false);
+  if(msg) toast(msg);
+}
+
+function playFile(key, btn){
+  var a=CLIP_EL[key];
+  if(!a){ playTTS(key,btn); return; }
+  var started=false, done=false, watch=null, last=0;
+  function clean(){ a.onplaying=null; a.onended=null; a.onerror=null; if(watch){ clearInterval(watch); watch=null; } }
+  function finish(){ if(done)return; done=true; clean(); try{a.pause();}catch(e){} release(true); }
+  function toTTS(){
+    if(done)return; done=true; clean();
+    try{ a.pause(); }catch(e){}
+    CLIP_OK[key]=false;
+    if(started && key!=="test" && ST.plays[key]>0){ ST.plays[key]-=1; save(); }
+    AU.busy=true;                    /* stay locked, hand over to speech */
+    playTTS(key,btn);
+  }
+  a.onplaying=function(){ if(!started){ started=true; if(key!=="test") consume(key); last=Date.now(); } };
+  a.onended=finish;
+  a.onerror=toTTS;
+  watch=setInterval(function(){
+    if(done) return;
+    if(!started){ if(Date.now()-last>7000) toTTS(); return; }
+    if(!a.paused && !a.ended){ last=Date.now(); return; }
+    if(a.ended){ finish(); return; }
+    if(Date.now()-last>8000) refundStalled();
+  },1000);
+  function refundStalled(){ if(done)return; done=true; clean(); try{a.pause();}catch(e){}
+    refund(key,"Kayıt yarıda kesildi — dinleme hakkınız iade edildi, tekrar deneyin."); }
+  last=Date.now();
+  try{ a.currentTime=0; }catch(e){}
+  var pr=a.play();
+  if(pr&&pr.catch) pr.catch(function(){ toTTS(); });
+}
+
+function playTTS(key, btn){
+  var lines=TTS_LINES[key]||[], rate=TTS_RATE[key]||0.95;
+  if(!window.speechSynthesis || !lines.length){
+    refund(key,"Bu cihazda ses çalınamadı. Lütfen başka bir tarayıcı deneyin.");
+    return;
+  }
+  refreshVoices();
+  try{ if(speechSynthesis.speaking||speechSynthesis.pending) speechSynthesis.cancel(); }catch(e){}
+  var i=0, started=false, finished=false, lastTick=Date.now();
+  function bump(){ lastTick=Date.now(); }
+  function end(ok){
+    if(finished) return; finished=true;
+    if(TTS.keep){ clearInterval(TTS.keep); TTS.keep=null; }
+    release(ok);
+  }
+  function fail(){
+    if(finished) return;
+    try{ speechSynthesis.cancel(); }catch(e){}
+    finished=true;
+    if(TTS.keep){ clearInterval(TTS.keep); TTS.keep=null; }
+    refund(key, started ? "Kayıt yarıda kesildi — dinleme hakkınız iade edildi, tekrar deneyin."
+                        : "Ses başlatılamadı. Cihaz sesini açıp tekrar deneyin — hakkınız düşmedi.");
+  }
+  TTS.keep=setInterval(function(){
+    if(finished) return;
+    try{
+      if(speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume();
+      if(speechSynthesis.speaking || speechSynthesis.pending) bump();
+    }catch(e){}
+    if(Date.now()-lastTick>3500) fail();
+  },1000);
+  function next(){
+    bump();
+    if(i>=lines.length){ end(started); return; }
+    var L=lines[i++], txt=(typeof L==="string")?L:L.t;
+    var u=new SpeechSynthesisUtterance(txt);
+    if(SPK.a) u.voice=SPK.a;
+    u.lang=(SPK.a&&SPK.a.lang)||"en-GB";
+    u.rate=rate;
+    u.onstart=function(){ bump(); if(!started){ started=true; if(key!=="test") consume(key); } };
+    u.onend=function(){ bump(); setTimeout(next,320); };
+    u.onerror=function(){ bump(); setTimeout(next,200); };
+    try{ speechSynthesis.speak(u); }catch(e){ setTimeout(next,200); }
+  }
+  next();
+}
+
+/* ===================== RENDERING ===================== */
+
+var LT=["A","B","C","D"];
+
+function makeQ(bank, no, textHtml, options){
+  var q=el("div","q"); q.id="q_"+bank+"_"+no;
+  var head=el("div","qhead");
+  head.appendChild(el("span","qnum",String(no)));
+  head.appendChild(el("span","qtext",textHtml));
+  q.appendChild(head);
+  var opts=el("div","opts"+(options.length===3?" one":""));
+  options.forEach(function(txt,oi){
+    var letter=LT[oi];
+    var lab=el("label","opt");
+    var inp=document.createElement("input");
+    inp.type="radio"; inp.name=bank+"_"+no; inp.value=letter; inp.id="o_"+bank+"_"+no+"_"+letter;
+    /* Clicking the option that is already chosen clears it, so a candidate
+       who is not sure can simply un-pick and leave the question blank. */
+    inp.addEventListener("click",function(){
+      if(ST.a[bank][no]===letter) clearPick(bank,no,opts,q);
+      else pick(bank,no,opts,letter,lab,q,txt);
+    });
+    /* keyboard selection (arrow keys) fires change but not click */
+    inp.addEventListener("change",function(){
+      if(ST.a[bank][no]!==letter) pick(bank,no,opts,letter,lab,q,txt);
+    });
+    lab.title="Seçiliyken tekrar basarsanız seçim kalkar";
+    lab.appendChild(inp);
+    lab.appendChild(el("span","ltr",letter));
+    lab.appendChild(el("span",null,txt));
+    if(ST.a[bank][no]===letter){ inp.checked=true; lab.classList.add("sel"); q.classList.add("answered"); }
+    opts.appendChild(lab);
+  });
+  q.appendChild(opts);
+  return q;
+}
+
+function clearPick(bank,no,opts,q){
+  delete ST.a[bank][no];
+  var sibs=opts.querySelectorAll(".opt");
+  for(var s=0;s<sibs.length;s++){
+    sibs[s].classList.remove("sel");
+    var r=sibs[s].querySelector("input");
+    if(r) r.checked=false;
+  }
+  q.classList.remove("answered");
+  if(bank==="p3") paintGap(no,null);
+  save(); updateCount(bank);
+}
+
+function pick(bank,no,opts,letter,lab,q,txt){
+  var sibs=opts.querySelectorAll(".opt");
+  for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("sel");
+  lab.classList.add("sel"); q.classList.add("answered");
+  ST.a[bank][no]=letter;
+  if(bank==="p3") paintGap(no,txt);
+  save(); updateCount(bank);
+}
+
+function dialogueHtml(lines,ask){
+  var h='<span class="sp"><b>A</b>'+lines[0]+'</span><span class="sp"><b>B</b>'+lines[1]+'</span>';
+  if(ask) h+='<span class="ask">'+ask+'</span>';
+  return h;
+}
+function renderPlain(host,items,bank,start){
+  var h=$(host); h.innerHTML="";
+  items.forEach(function(it,i){ h.appendChild(makeQ(bank,start+i,it[0],it[1])); });
+}
+function renderDialogueForm(host,items,bank,start){
+  var h=$(host); h.innerHTML="";
+  items.forEach(function(it,i){ h.appendChild(makeQ(bank,start+i,dialogueHtml(it[0]),it[1])); });
+}
+function renderDialogueMeaning(host,items,bank,start){
+  var h=$(host); h.innerHTML="";
+  items.forEach(function(it,i){ h.appendChild(makeQ(bank,start+i,dialogueHtml(it[0],it[1]),it[2])); });
+}
+
+/* --- cloze: the gap is a visible, clickable, numbered box that fills in --- */
+function gapify(t){
+  return t.replace(/\{(\d+)\}/g, function(m,n){
+    return '<span class="gapno" id="gap_'+n+'" data-gap="'+n+'" role="button" tabindex="0">' +
+           '<span class="n">'+n+'</span><span class="w dots">_____</span></span>';
+  });
+}
+function paintGap(no,word){
+  var g=$("gap_"+no); if(!g) return;
+  var w=g.querySelector(".w");
+  if(word){ w.textContent=word; w.classList.remove("dots"); g.classList.add("filled"); }
+  else{ w.textContent="_____"; w.classList.add("dots"); g.classList.remove("filled"); }
+}
+function renderCloze(){
+  $("clozeTextA").innerHTML=gapify(CLOZE_A);
+  $("clozeTextB").innerHTML=gapify(CLOZE_B);
+  renderPlain("q-p3a",P3.slice(0,5),"p3",1);
+  renderPlain("q-p3b",P3.slice(5),"p3",6);
+  for(var n=1;n<=10;n++){
+    var sel=ST.a.p3[n];
+    if(sel) paintGap(n, P3[n-1][1][LT.indexOf(sel)]);
+  }
+}
+function focusGapQuestion(n){
+  var q=$("q_p3_"+n); if(!q) return;
+  q.scrollIntoView({behavior:"smooth",block:"center"});
+  q.classList.remove("flash"); void q.offsetWidth; q.classList.add("flash");
+}
+
+function renderDict(){
+  var host=$("dict"); host.innerHTML="";
+  var ol=document.createElement("ol");
+  DICT.forEach(function(d,di){
+    var li=document.createElement("li");
+    var row=el("div","dictrow");
+    var btn=document.createElement("button");
+    btn.type="button"; btn.innerHTML=PLAY_HTML; btn.setAttribute("data-dict",String(di+1));
+    var plays=el("span","plays","2 hak"); plays.id="p-d"+(di+1);
+    row.appendChild(btn); row.appendChild(plays);
+    li.appendChild(row);
+    var line=el("div");
+    d.parts.forEach(function(p){
+      if(typeof p==="string"){ line.appendChild(document.createTextNode(p)); return; }
+      var inp=document.createElement("input");
+      inp.type="text"; inp.id="d_"+p.g; inp.setAttribute("aria-label","Boşluk "+p.g);
+      inp.autocapitalize="off"; inp.autocomplete="off"; inp.spellcheck=false;
+      inp.value=ST.a.p5[p.g]||"";
+      inp.addEventListener("input",function(){
+        if(inp.value.trim()==="") delete ST.a.p5[p.g]; else ST.a.p5[p.g]=inp.value;
+        save(); updateCount("p5");
+      });
+      line.appendChild(inp);
+      line.appendChild(el("span","gn",String(p.g)));
+    });
+    li.appendChild(line);
+    ol.appendChild(li);
+  });
+  host.appendChild(ol);
+  refreshPlayLabels();
+}
+
+/* ===================== COUNTS ===================== */
+
+function answered(bank){
+  var n=0,o=ST.a[bank]||{};
+  for(var k in o){ if(Object.prototype.hasOwnProperty.call(o,k)&&String(o[k]).trim()!=="") n++; }
+  return n;
+}
+function updateCount(bank){
+  var c=$("c-"+bank); if(!c) return;
+  var P=null;
+  for(var i=0;i<PARTS.length;i++) if(PARTS[i].id===bank) P=PARTS[i];
+  if(!P||!P.items) return;
+  var a=answered(bank), blank_=P.items-a;
+  c.innerHTML = a+" / "+P.items+" cevaplandı" +
+    (blank_>0 ? " <span style='color:var(--text-3)'>· "+blank_+" boş</span>" : "");
+  c.style.color = (blank_===0) ? "var(--accent)" : "var(--text-2)";
+}
+
+/* ===================== AUDIO ===================== */
+
+function playsLeft(k){ return 2-(ST.plays[k]||0); }
+function refreshPlayLabels(){
+  var busy = AU.busy;
+  function setBtn(b, left){ if(b) b.disabled = busy || (left<=0); }
+  ["r0","r1","r2"].forEach(function(k){
+    var e=$("p-"+k); if(!e) return;
+    var left=playsLeft(k);
+    e.textContent = left>0 ? left+" hak" : "hak bitti";
+    setBtn(document.querySelector("[data-audio='"+k+"']"), left);
+  });
+  for(var i=1;i<=DICT.length;i++){
+    var key="d"+i, e2=$("p-"+key); if(!e2) continue;
+    var l2=playsLeft(key);
+    e2.textContent = l2>0 ? l2+" hak" : "hak bitti";
+    setBtn(document.querySelector("[data-dict='"+i+"']"), l2);
+  }
+  var t=$("btnTest"); if(t) t.disabled = busy;
+}
+function consume(k){ ST.plays[k]=(ST.plays[k]||0)+1; save(); refreshPlayLabels(); }
+
+document.addEventListener("click",function(ev){
+  var g = ev.target.closest ? ev.target.closest(".gapno") : null;
+  if(g){ focusGapQuestion(g.getAttribute("data-gap")); return; }
+
+  var b = ev.target.closest ? ev.target.closest("button") : null;
+  if(!b) return;
+
+  if(b.hasAttribute("data-audio")){ primeAudio(); playKey(b.getAttribute("data-audio"), b); return; }
+  if(b.hasAttribute("data-dict")){ primeAudio(); playKey("d"+b.getAttribute("data-dict"), b); return; }
+  if(b.hasAttribute("data-next")) advance(false);
+});
+document.addEventListener("keydown",function(ev){
+  if(ev.key!=="Enter" && ev.key!==" ") return;
+  var g = ev.target.closest ? ev.target.closest(".gapno") : null;
+  if(g){ ev.preventDefault(); focusGapQuestion(g.getAttribute("data-gap")); }
+});
+
+/* ===================== FLOW ===================== */
+
+var SCREENS=["welcome","p1","p2","p3","p4","p5","p6","result"];
+function show(name){
+  SCREENS.forEach(function(s){ var e=$("s-"+s); if(e) e.hidden=(s!==name); });
+  try{ window.scrollTo(0,0); }catch(e){}
+}
+var tick=null;
+
+function startPart(i){
+  stopAudio();
+  ST.part=i; ST.ends=Date.now()+PARTS[i].secs*1000; save(); enterPart();
+}
+function enterPart(){
+  var i=ST.part,P=PARTS[i];
+  $("bar").hidden=false;
+  $("barPart").textContent=P.label;
+  $("progFill").style.width=(i/PARTS.length*100).toFixed(1)+"%";
+  show(P.id);
+  if(P.id==="p1"){ renderDialogueForm("q-p1a",P1A,"p1",1); renderDialogueMeaning("q-p1b",P1B,"p1",15); }
+  if(P.id==="p2"){
+    renderPlain("q-p2n0",P2N0,"p2",1); renderPlain("q-p2nb",P2NB,"p2",2);
+    renderPlain("q-p2n1",P2N1,"p2",3); renderPlain("q-p2n2",P2N2,"p2",4);
+    renderPlain("q-p2a", P2A, "p2",5); renderPlain("q-p2b", P2B, "p2",8);
+  }
+  if(P.id==="p3") renderCloze();
+  if(P.id==="p4"){
+    renderPlain("q-p4z",P4Z,"p4",1); renderPlain("q-p4a",P4A,"p4",3); renderPlain("q-p4b",P4B,"p4",6);
+    refreshPlayLabels();
+  }
+  if(P.id==="p5") renderDict();
+  if(P.id==="p6"){ $("writing").value=ST.writing||""; countWords(); }
+  if(P.items) updateCount(P.id);
+  runClock();
+}
+function runClock(){
+  if(tick) clearInterval(tick);
+  function paint(){
+    var left=Math.round((ST.ends-Date.now())/1000);
+    var c=$("clock"); c.textContent=mmss(left); c.classList.toggle("low",left<=60);
+    if(left<=0){ clearInterval(tick); tick=null; toast("Bölüm süresi doldu — sonraki bölüme geçiliyor."); advance(true); }
+  }
+  paint(); tick=setInterval(paint,1000);
+}
+function advance(){
+  /* Blank answers are allowed on purpose — never block the candidate here. */
+  stopAudio();
+  if(ST.part===5) ST.writing=$("writing").value;
+  save();
+  if(ST.part>=PARTS.length-1){ finish(); return; }
+  startPart(ST.part+1);
+}
+function countWords(){
+  var v=$("writing").value.trim();
+  $("wc").textContent = v ? v.split(/\s+/).length : 0;
+}
+
+/* ===================== SCORING ===================== */
+
+function scoreAll(){
+  var s={p1:0,p2:0,p3:0,p4:0,p5:0};
+  var lv={1:[0,0],2:[0,0],3:[0,0],4:[0,0]};   /* [earned, max] per CEFR level */
+  var blanks=0;
+
+  function mark(bank,count,correctFn){
+    for(var i=1;i<=count;i++){
+      var pt=ptsOf(bank,i), L=LEVELS[bank][i-1];
+      lv[L][1]+=pt;
+      var given = ST.a[bank][i];
+      if(given===undefined || String(given).trim()===""){ blanks++; continue; }
+      if(correctFn(i,given)){ s[bank]+=pt; lv[L][0]+=pt; }
+    }
+  }
+  mark("p1",20,function(i,g){ return g===KEY.p1[i-1]; });
+  mark("p2",12,function(i,g){ return g===KEY.p2[i-1]; });
+  mark("p3",10,function(i,g){ return g===KEY.p3[i-1]; });
+  mark("p4",8, function(i,g){ return g===KEY.p4[i-1]; });
+  mark("p5",14,function(i,g){
+    var alts=KEY.p5[i-1].split("|"), n=norm(g);
+    for(var z=0;z<alts.length;z++) if(n===alts[z]) return true;
+    return false;
+  });
+  return {s:s, lv:lv, blanks:blanks};
+}
+
+/* Cut-scores derived by simulating candidates at A1, A2 and B1 against this
+   exact bank, then placing each boundary where adjacent distributions cross. */
+var BANDNAME = {1:"A1", 2:"A2", 3:"B1", 4:"B1+"};
+function rawAuto(a){ if(a>=74) return 4; if(a>=63) return 3; if(a>=46) return 2; return 1; }
+function rawFull(t){ if(t>=88) return 4; if(t>=75) return 3; if(t>=55) return 2; return 1; }
+
+/* Safety net: a candidate who genuinely mastered a level (>=70% of that
+   level's points, and of every level below it) is never placed under it.
+   Guessing averages 22-33%, so this can only lift a real performance. */
+function masteryBand(lv){
+  var best = 0;
+  for(var L=1; L<=3; L++){
+    var a = lv && lv[L];
+    if(a && a[1] && (a[0]/a[1]) >= 0.70) best = L; else break;
+  }
+  return best;
+}
+function bandAuto(a){ return BANDNAME[rawAuto(a)]; }
+function bandFull(t){ return BANDNAME[rawFull(t)]; }
+function levelOf(rec){
+  var m = (rec.writing!==null && rec.writing!==undefined);
+  var r = m ? rawFull(rec.auto + rec.writing) : rawAuto(rec.auto);
+  return BANDNAME[Math.max(r, masteryBand(rec.lv))];
+}
+function placedByMastery(rec){
+  var m = (rec.writing!==null && rec.writing!==undefined);
+  var r = m ? rawFull(rec.auto + rec.writing) : rawAuto(rec.auto);
+  return masteryBand(rec.lv) > r;
+}
+function isBorderline(rec){
+  var m=(rec.writing!==null&&rec.writing!==undefined);
+  var v=m?(rec.auto+rec.writing):rec.auto;
+  var cuts=m?[55,75,88]:[46,63,74];
+  for(var i=0;i<cuts.length;i++) if(Math.abs(v-cuts[i])<=3) return true;
+  return false;
+}
+
+function finish(){
+  if(tick){ clearInterval(tick); tick=null; }
+  stopAudio();
+  ST.writing=$("writing").value; ST.done=true;
+
+  var r=scoreAll();
+  var auto=r.s.p1+r.s.p2+r.s.p3+r.s.p4+r.s.p5;
+  var wtxt=(ST.writing||"").trim();
+  var rec={
+    id:String(Date.now())+"-"+Math.floor(Math.random()*1000),
+    name:(ST.name||"İsimsiz").trim(), phone:(ST.phone||"").trim(),
+    mail:(ST.mail||"").trim(), group:(ST.group||"").trim(),
+    at:new Date().toISOString(),
+    mins: ST.started ? Math.round((Date.now()-ST.started)/60000) : null,
+    s:r.s, lv:r.lv, blanks:r.blanks, auto:auto, writing:null,
+    answers:{p1:ST.a.p1,p2:ST.a.p2,p3:ST.a.p3,p4:ST.a.p4,p5:ST.a.p5},
+    words: wtxt ? wtxt.split(/\s+/).length : 0, text:wtxt
+  };
+  var lvl=levelOf(rec);
+  $("bar").hidden=true;
+  $("rLevel").textContent = (lvl==="B1+") ? "B1" : lvl;
+  $("rName2").textContent = LEVELNAME[lvl==="B1+"?"B1":lvl]||"";
+  $("rHead").textContent = rec.name;
+  $("rSaving").hidden=false;
+  $("rSaving").textContent="Sonucunuz kaydediliyor…";
+  show("result");
+
+  var row = {
+    name:rec.name, phone:rec.phone, email:rec.mail, groupname:rec.group,
+    minutes:rec.mins, blanks:rec.blanks, words:rec.words,
+    ua:(navigator.userAgent||"").slice(0,300),
+    answers:rec.answers, sections:rec.s, levels:rec.lv,
+    auto:rec.auto, writing:null, wtext:rec.text, level:lvl
+  };
+  post(row).then(function(){
+    $("rSaving").innerHTML="<span style='color:var(--ok)'>Sonucunuz kaydedildi.</span>";
+  }).catch(function(){
+    queue(row);
+    $("rSaving").innerHTML="<span style='color:var(--warn)'>Bağlantı kurulamadı — sonucunuz cihazınıza kaydedildi ve internet gelince otomatik gönderilecek. Bu sayfayı kapatabilirsiniz.</span>";
+  });
+
+  lsDel(SKEY); ST=blank();
+}
+
+/* ===================== BOOT ===================== */
+
+$("btnTest").addEventListener("click",function(){
+  if(AU.busy) return;
+  primeAudio();
+  $("testState").textContent="Çalıyor…";
+  playKey("test", this, function(ok){
+    $("testState").innerHTML = ok
+      ? "<span style='color:var(--ok)'>Ses çalışıyor. Başlayabilirsiniz.</span>"
+      : "<span style='color:var(--alert)'>Ses gelmedi — cihaz sesini açıp tekrar deneyin.</span>";
+  });
+});
+$("writing").addEventListener("input",function(){ ST.writing=this.value; countWords(); });
+setInterval(function(){ if(ST.part===5) save(); },5000);
+
+$("btnStart").addEventListener("click",function(){
+  var n=$("fName").value.trim();
+  if(!n){ $("fName").focus(); toast("Lütfen adınızı yazın."); return; }
+  primeAudio();
+  ST=blank();
+  ST.name=n; ST.phone=$("fPhone").value.trim(); ST.mail=$("fMail").value.trim(); ST.group=$("fGroup").value.trim();
+  ST.started=Date.now();
+  startPart(0);
+});
+$("btnAgain").addEventListener("click",function(){
+  ["fName","fPhone","fMail"].forEach(function(id){ $(id).value=""; });
+  $("resumeNote").textContent="";
+  show("welcome"); $("fName").focus();
+});
+window.addEventListener("beforeunload",function(){ if(ST.part>=0&&!ST.done) save(); });
+
+(function boot(){
+  if(CFG.SCHOOL_NAME) $("brand").textContent = CFG.SCHOOL_NAME + " · Seviye tespit · A1 – A2 – B1";
+  if(CFG.CONTACT_LINE) $("rContact").textContent = CFG.CONTACT_LINE;
+  initClips();
+  flushOutbox();
+  window.addEventListener("online", flushOutbox);
+  if(!configured()){
+    var w=document.createElement("div");
+    w.className="note warn";
+    w.style.margin="0 0 22px";
+    w.innerHTML="<strong>Kurulum tamamlanmadı.</strong> <code>config.js</code> dosyasındaki Supabase bilgileri doldurulmadığı için sonuçlar merkeze gönderilemez. Bu uyarıyı yalnızca kurulum sırasında görürsünüz.";
+    var s=$("s-welcome"); s.insertBefore(w, s.children[2]);
+  }
+
+  var prev=loadState();
+  if(prev&&!prev.done&&prev.part>=0&&prev.part<PARTS.length){
+    var note=$("resumeNote");
+    note.innerHTML="Yarım kalmış sınav: <strong>"+esc(prev.name||"?")+"</strong>";
+    var b=document.createElement("button");
+    b.type="button"; b.className="tiny"; b.textContent="Kaldığı yerden devam et"; b.style.marginTop="6px";
+    b.addEventListener("click",function(){
+      ST=prev;
+      if(!ST.plays) ST.plays={};
+      if(!ST.a) ST.a={p1:{},p2:{},p3:{},p4:{},p5:{}};
+      primeAudio();
+      while(ST.part<PARTS.length-1&&(ST.ends-Date.now())<=0){ ST.part++; ST.ends=Date.now()+PARTS[ST.part].secs*1000; }
+      if((ST.ends-Date.now())<=0) ST.ends=Date.now()+60000;
+      enterPart();
+    });
+    note.appendChild(document.createElement("br")); note.appendChild(b);
+  }
+  show("welcome");
+})();
+</script>
+
+</body>
+</html>

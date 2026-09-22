@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Sınav Sonuçları</title>
+<script src="config.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface-2:#f2f2f5; --surface-3:#e7e7ec;
+    --text:#1d1d1f; --text-2:#6e6e73; --text-3:#8e8e93;
+    --line:rgba(0,0,0,.09); --line-2:rgba(0,0,0,.17);
+    --accent:#0071e3; --accent-soft:rgba(0,113,227,.09); --accent-mid:rgba(0,113,227,.18);
+    --alert:#c7361f; --alert-soft:rgba(199,54,31,.10);
+    --ok:#1c7a4a; --warn:#8a6100;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.055);
+    --r-lg:20px; --r-md:14px; --r-sm:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
+      --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
+      --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
+      --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
+      --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
+      --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
+    --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
+    --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
+    --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
+    --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
+    --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+    font-size:17px; line-height:1.55; letter-spacing:-0.011em; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding-inline:20px}
+  .wide{max-width:900px}
+
+  #bar{
+    position:sticky;top:env(safe-area-inset-top, 0px);z-index:30;
+    background:color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid var(--line);
+  }
+  #bar .inner{max-width:720px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px}
+  #barPart{font-size:14px;color:var(--text-2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #clock{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;padding:2px 10px;border-radius:8px}
+  #clock.low{color:var(--alert);background:var(--alert-soft)}
+  #prog{height:2px;background:var(--surface-3)}
+  #progFill{height:100%;width:0;background:var(--accent);transition:width .35s ease}
+
+  h1{font-size:clamp(29px,6.2vw,42px);line-height:1.08;font-weight:600;letter-spacing:-0.033em;margin:0 0 14px;text-wrap:balance}
+  h2{font-size:clamp(23px,4.6vw,30px);line-height:1.15;font-weight:600;letter-spacing:-0.028em;margin:0 0 6px;text-wrap:balance}
+  h3{font-size:19px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px}
+  h4{font-size:15px;font-weight:600;margin:26px 0 10px;color:var(--text-2)}
+  p{margin:0 0 14px}
+  .kicker{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 9px}
+  .sub{color:var(--text-2);margin:0 0 24px}
+  .fine{font-size:14.5px;color:var(--text-2)}
+  section.screen{padding-block:38px 90px}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:24px 22px}
+  .card.quiet{box-shadow:none;background:var(--surface-2);border-color:transparent}
+  .card + .card{margin-top:18px}
+
+  button{
+    font:inherit;font-size:16px;font-weight:500;
+    border:1px solid var(--line-2);background:var(--surface);color:var(--text);
+    padding:11px 20px;border-radius:999px;cursor:pointer;
+    transition:background .15s ease, transform .08s ease, opacity .15s ease;
+  }
+  button:hover{background:var(--surface-2)}
+  button:active{transform:scale(.985)}
+  button:disabled{opacity:.4;cursor:default;transform:none}
+  button.primary{background:var(--accent);border-color:transparent;color:#fff}
+  button.primary:hover{filter:brightness(1.07);background:var(--accent)}
+  button.big{padding:14px 30px;font-size:17px}
+  button.tiny{font-size:13.5px;padding:6px 13px}
+  button.link{border:none;background:none;color:var(--accent);padding:0;font-size:14.5px;text-decoration:underline;text-underline-offset:3px}
+  button.link:hover{background:none;filter:brightness(1.15)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  input[type=text],input[type=tel],input[type=email],input[type=password],input[type=number],textarea{
+    font:inherit;color:var(--text);background:var(--surface);
+    border:1px solid var(--line-2);border-radius:var(--r-sm);padding:10px 12px;width:100%;
+  }
+  textarea{resize:vertical;line-height:1.6;min-height:220px;border-radius:var(--r-md)}
+  input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .field label{font-size:14px;color:var(--text-2)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:520px){.grid2{grid-template-columns:1fr}}
+
+  .qlist{display:flex;flex-direction:column;gap:12px}
+  .q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;scroll-margin-top:80px}
+  .q.answered{border-color:color-mix(in srgb, var(--accent) 40%, var(--line))}
+  .q.flash{animation:flash 1.1s ease}
+  @keyframes flash{0%,100%{background:var(--surface)}30%{background:var(--accent-soft)}}
+  @media (prefers-reduced-motion: reduce){.q.flash{animation:none;outline:2px solid var(--accent)}}
+  .qhead{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+  .qnum{font-size:13px;font-weight:600;color:var(--text-3);font-variant-numeric:tabular-nums;min-width:22px;padding-top:3px}
+  .qtext{flex:1;font-size:16.5px}
+  .qtext .sp{display:block;margin-bottom:1px}
+  .qtext .sp b{font-weight:600;color:var(--text-2);margin-right:5px}
+  .qtext .ask{display:block;margin-top:9px;color:var(--text-2);font-size:15.5px}
+  .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-left:32px}
+  .opts.one{grid-template-columns:1fr}
+  @media (max-width:560px){.opts{grid-template-columns:1fr;padding-left:0}}
+  .opt{
+    display:flex;align-items:center;gap:9px;cursor:pointer;
+    border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 12px;font-size:16px;
+    background:var(--bg);transition:border-color .12s ease, background .12s ease;
+  }
+  .opt:hover{border-color:var(--line-2)}
+  .opt input{accent-color:var(--accent);margin:0;flex:none}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt .ltr{font-weight:600;color:var(--text-3);font-size:13.5px;min-width:14px}
+  .opt.sel .ltr{color:var(--accent)}
+
+  .passage{background:var(--surface-2);border-radius:var(--r-md);padding:20px;font-size:16.5px;line-height:1.95;margin-bottom:16px}
+  .passage p:last-child{margin-bottom:0}
+  .passage .ph{font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;font-weight:600}
+  .sign{
+    border:1.5px solid var(--line-2);border-radius:var(--r-sm);padding:16px 18px;text-align:center;
+    font-size:16.5px;line-height:1.5;background:var(--surface);margin-bottom:12px;
+  }
+  .sign .big{display:block;font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:17px;margin-bottom:5px}
+  .msg{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:12px;font-size:16px}
+  .msg .from{font-size:13px;color:var(--text-3);margin-bottom:5px}
+
+  /* --- cloze gaps: must read unmistakably as a numbered blank --- */
+  .gapno{
+    display:inline-block;min-width:96px;text-align:center;vertical-align:baseline;
+    border:1px dashed var(--accent);border-radius:8px;background:var(--accent-soft);
+    color:var(--accent);font-weight:600;font-size:15px;padding:1px 10px;margin:0 3px;
+    cursor:pointer;transition:background .15s ease;
+  }
+  .gapno:hover{background:var(--accent-mid)}
+  .gapno .n{font-size:11.5px;font-weight:700;opacity:.75;margin-right:5px}
+  .gapno.filled{border-style:solid;background:var(--accent-mid)}
+  .gapno .w{font-style:normal}
+  .gapno .dots{letter-spacing:1px;opacity:.55}
+  .passage.cloze{line-height:2.75}
+  .passage.cloze p{margin-bottom:18px}
+
+  .audio{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface-2);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px}
+  .audio .label{flex:1;min-width:150px;font-size:15px;color:var(--text-2)}
+  .audio .label b{color:var(--text);font-weight:600;display:block;font-size:16px}
+  .plays{font-size:13px;color:var(--text-3);font-variant-numeric:tabular-nums}
+  .wave{display:inline-flex;align-items:flex-end;gap:2px;height:14px;margin-right:9px}
+  .wave i{width:2px;background:currentColor;border-radius:1px;opacity:.55}
+  .wave i:nth-child(1){height:6px} .wave i:nth-child(2){height:12px}
+  .wave i:nth-child(3){height:8px} .wave i:nth-child(4){height:14px}
+  .playing .wave i{animation:w .7s ease-in-out infinite;opacity:1}
+  .wave i:nth-child(2){animation-delay:.12s} .wave i:nth-child(3){animation-delay:.24s} .wave i:nth-child(4){animation-delay:.36s}
+  @keyframes w{0%,100%{height:4px}50%{height:14px}}
+  @media (prefers-reduced-motion: reduce){.wave i{animation:none!important}}
+
+  .dict{font-size:17.5px;line-height:2.15}
+  .dict ol{padding-left:1.4em;margin:0}
+  .dict li{margin-bottom:18px}
+  .dict li:last-child{margin-bottom:0}
+  .dict input{
+    display:inline-block;padding:0 7px 2px;font-size:16.5px;line-height:1.5;width:7.5em;
+    border:none;border-bottom:1.5px solid var(--line-2);border-radius:0;background:transparent;vertical-align:baseline;
+  }
+  .dict input:focus{box-shadow:none;border-bottom-color:var(--accent);background:var(--accent-soft)}
+  .gn{font-size:11px;color:var(--accent);font-weight:700;vertical-align:super;margin:0 2px 0 1px}
+  .dictrow{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+
+  .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r-md) var(--r-md) 0;padding:13px 16px;font-size:15px}
+  .note.warn{border-left-color:var(--alert);background:var(--alert-soft)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;color:var(--text-2);background:var(--surface-2);border-radius:999px;padding:5px 12px}
+  ul.clean{margin:0;padding-left:1.15em}
+  ul.clean li{margin-bottom:7px}
+  ul.clean li:last-child{margin-bottom:0}
+  .footrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px}
+  .footrow .left{flex:1;min-width:120px;font-size:14px;color:var(--text-2)}
+
+  .levelbox{text-align:center;padding:38px 20px}
+  .levelbig{font-size:76px;font-weight:600;letter-spacing:-0.045em;line-height:1;margin-bottom:10px}
+  .levelname{font-size:19px;color:var(--text-2)}
+
+  .adminbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+  .adminbar .grow{flex:1;min-width:140px}
+  table.rows{width:100%;border-collapse:collapse;font-size:14.5px}
+  table.rows th,table.rows td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.rows th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);font-weight:600;white-space:nowrap}
+  table.rows td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.rows input[type=number]{width:70px;padding:5px 7px;font-size:14px;text-align:right}
+  table.rows tr.open{background:var(--surface-2)}
+  .lvltag{display:inline-block;font-weight:600;font-size:13px;padding:3px 9px;border-radius:7px;background:var(--surface-2);white-space:nowrap}
+  .lvltag.set{background:var(--accent-soft);color:var(--accent)}
+  .flag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--alert-soft);color:var(--alert);margin-left:6px}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  .detail{background:var(--surface-2);border-radius:var(--r-md);padding:18px 20px;margin:4px 0 10px}
+  .detail h5{margin:0 0 10px;font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);font-weight:600}
+  .detail .block + .block{margin-top:22px}
+  .drow{display:flex;align-items:center;gap:12px;padding:5px 0;font-size:14.5px}
+  .drow .nm{min-width:132px}
+  .drow .bar{flex:1;height:7px;background:var(--surface-3);border-radius:4px;overflow:hidden;min-width:60px}
+  .drow .bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+  .drow .bar i.low{background:var(--alert)}
+  .drow .bar i.mid{background:var(--warn)}
+  .drow .vl{min-width:84px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text-2)}
+  .dfacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .dfacts span{font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--text-2)}
+  .verdict{background:var(--surface);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 15px;font-size:14.5px;margin-top:6px}
+  .wbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;margin-top:8px;font-size:15px;white-space:pre-wrap;line-height:1.6}
+
+  .toast{
+    position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(24px + env(safe-area-inset-bottom, 0px));z-index:60;
+    background:var(--text);color:var(--bg);font-size:15px;padding:11px 20px;border-radius:999px;
+    box-shadow:0 8px 30px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .25s ease;
+    max-width:88vw;text-align:center;
+  }
+  .toast.show{opacity:1}
+  .footlink{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);text-align:center}
+</style>
+<style>
+  /* standalone page needs the few resets the embedded version got for free */
+  html{-webkit-text-size-adjust:100%}
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<style>
+  html{-webkit-text-size-adjust:100%}
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<style>
+  .wrap{max-width:1040px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:15px 17px}
+  .stat .k{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);font-weight:600;margin-bottom:6px}
+  .stat .v{font-size:27px;font-weight:600;letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums}
+  .stat .s{font-size:13px;color:var(--text-2);margin-top:5px}
+  .split{display:flex;gap:4px;margin-top:9px;height:6px;border-radius:3px;overflow:hidden;background:var(--surface-3)}
+  .split i{display:block;height:100%}
+  .legend{display:flex;gap:12px;margin-top:8px;font-size:12.5px;color:var(--text-2);flex-wrap:wrap}
+  .legend b{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0}
+  .warnbox{border-left:3px solid var(--alert);background:var(--alert-soft);border-radius:0 var(--r-md) var(--r-md) 0;padding:13px 16px;font-size:15px;margin-bottom:20px}
+  .loginwrap{max-width:420px;margin:60px auto}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line-2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){.spin{animation:none}}
+</style>
+
+<main class="wrap">
+
+<section class="screen" id="s-login">
+  <div class="loginwrap">
+    <p class="kicker" id="brandL">Yönetici</p>
+    <h2 style="margin-bottom:22px">Sınav sonuçları</h2>
+    <div class="card">
+      <div class="field">
+        <label for="em">E-posta</label>
+        <input type="email" id="em" autocomplete="username" placeholder="ornek@kurs.com">
+      </div>
+      <div class="field">
+        <label for="pw">Şifre</label>
+        <input type="password" id="pw" autocomplete="current-password">
+      </div>
+      <div class="footrow" style="margin-top:18px">
+        <span class="left" id="loginMsg"></span>
+        <button class="primary" id="btnLogin" type="button">Gir</button>
+      </div>
+    </div>
+    <p class="fine" style="margin-top:18px;color:var(--text-3)">Giriş bilgileri Supabase panelinizdeki <strong>Authentication → Users</strong> bölümünden oluşturulur.</p>
+  </div>
+</section>
+
+<section class="screen" id="s-panel" hidden>
+  <p class="kicker" id="brandP">Yönetici</p>
+  <h2>Sınav sonuçları</h2>
+  <p class="sub">Bütün cihazlardan gelen sonuçlar. Bir satırı açmak için <strong>Detay</strong>'a basın.</p>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="adminbar">
+    <input type="text" id="search" class="grow" placeholder="Ada, telefona, e-postaya veya gruba göre ara…">
+    <button class="tiny" id="btnRefresh" type="button">Yenile</button>
+    <button class="tiny" id="btnCsv" type="button">CSV kopyala</button>
+    <button class="tiny" id="btnOut" type="button">Çıkış</button>
+  </div>
+
+  <div class="card" style="padding:14px 16px">
+    <div class="table-scroll">
+      <table class="rows">
+        <thead><tr>
+          <th>Tarih</th><th>Aday</th><th>İletişim</th>
+          <th style="text-align:right">Oto.<br>/80</th><th style="text-align:right">Yazma<br>/20</th>
+          <th style="text-align:right">Toplam<br>/100</th><th>Seviye</th><th></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="fine" id="emptyMsg" style="margin:16px 0 0" hidden>Henüz sonuç yok.</p>
+  </div>
+
+  <div class="note" style="margin-top:18px">
+    <strong>Yazma puanı.</strong> Detay'ı açıp adayın yazısını okuyun ve dört ölçütün her birine 0–5 verin (içerik · düzen · dilbilgisi · kelime &amp; yazım), toplamı kutuya yazın. Toplam ve seviye anında güncellenir ve herkesin panelinde aynı anda görünür.
+  </div>
+  <p class="fine" id="foot" style="margin-top:18px"></p>
+</section>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+var CFG = window.STQ_CONFIG || {};
+function baseUrl(u){
+  return String(u||"").trim()
+    .replace(/\/+$/,"")
+    .replace(/\/rest\/v1$/i,"")
+    .replace(/\/auth\/v1$/i,"")
+    .replace(/\/+$/,"");
+}
+var API = baseUrl(CFG.SUPABASE_URL);
+var ANON = CFG.SUPABASE_ANON_KEY||"";
+var TOK = null, ROWS = [];
+
+/* item levels and point weights — must match the exam page */
+var LEVELS = {
+  p1: [1,1,1,1,1, 2,2,2,2,2, 3,3,3,3, 2,2,3,3,3,4],
+  p2: [1,1,2,2, 2,2,2, 3,3,3,3,3],
+  p3: [1,2,2,2,2, 3,3,4,3,3],
+  p4: [1,1, 2,2,2, 3,3,3],
+  p5: [1,1,1, 2,2,2,2, 3,3,3,3, 3,3,3]
+};
+var PTS2 = [1,1,1,1, 2,2,2, 2,2,2,2,2];
+function ptsOf(bank,i){ if(bank==="p2") return PTS2[i-1]; if(bank==="p4") return 2; return 1; }
+var SECLABEL = {p1:"Use of English",p2:"Reading",p3:"Cloze",p4:"Listening",p5:"Dictation"};
+var SECMAX   = {p1:20,p2:20,p3:10,p4:16,p5:14};
+var AUTO_MAX = 80, WRITE_MAX = 20;
+var LEVELNAME = {"A1":"Beginner","A2":"Elementary","B1":"Intermediate","B1+":"Intermediate +"};
+
+var KEYBLOB = "CFYBHBAKaRRpUkBBMVZdD3ESHhRuUkBBMlZdD3YSHhRsUkBBMFZdD3ASHhRpUkBBMlZdD3ESHhRvUkBBMlZdD3ASHhRuUkBBMVZdD3MSHhRuUkBBMlYsARBAABQXK04hUVhTbBAcEHQPXE4gUVhTbxAcEHcPXE4nUVhTbhAcEHQPXE4gUVhTbxAcEHIPLUBBA0dTF2kScBQBUi9BX1Y1Dx4ScxQBUi5BX1YyDx4ScxQBUihBX1YwDx4ScBRwXE4TR1ZLdhBzEBoPMk5PUTVTARB0EBoPMk5PUTZTARBzEBoPNE4+X1YBGBAKaRRaHx4IAFZdD0FdU1pBUkBBAAAQWVtfXBQBUhkQBhUdQUsSHhRPAgkCGBIQXkYSHhReFRoGHVZdD0VVV11JERUQUVhTTF5EWllYFwRBX1YDTFteW1hKUkBBGxEQW1tcSxQBUg8CHRcUQV5VVkpOEQIAFhgUSRAcEF5MFE5PUQMeWF5UEBoPHA0NFAEQSlcSb0s=";
+function unlock(b){
+  var salt="stq-2026-plc", bin=atob(b), out="";
+  for(var i=0;i<bin.length;i++) out+=String.fromCharCode(bin.charCodeAt(i)^salt.charCodeAt(i%salt.length));
+  return JSON.parse(out);
+}
+var KEY = unlock(KEYBLOB);
+
+/* ---------- helpers ---------- */
+function $(id){ return document.getElementById(id); }
+function el(t,c,h){ var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function pad(n){ return (n<10?"0":"")+n; }
+function norm(s){ return String(s||"").toLowerCase().trim().replace(/[‘’]/g,"'").replace(/[^a-z']/g,""); }
+var toastT;
+function toast(m){ var t=$("toast"); t.textContent=m; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove("show"); },3200); }
+function fmtDate(iso){ var d=new Date(iso);
+  return pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear()+
+         "<br><span style='color:var(--text-3)'>"+pad(d.getHours())+":"+pad(d.getMinutes())+"</span>"; }
+function fmtDatePlain(iso){ var d=new Date(iso);
+  return pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear()+" "+pad(d.getHours())+":"+pad(d.getMinutes()); }
+
+/* ---------- placement ---------- */
+var BANDNAME={1:"A1",2:"A2",3:"B1",4:"B1+"};
+function rawAuto(a){ if(a>=74)return 4; if(a>=63)return 3; if(a>=46)return 2; return 1; }
+function rawFull(t){ if(t>=88)return 4; if(t>=75)return 3; if(t>=55)return 2; return 1; }
+function masteryBand(lv){ var b=0;
+  for(var L=1;L<=3;L++){ var a=lv&&lv[L]; if(a&&a[1]&&(a[0]/a[1])>=0.70) b=L; else break; }
+  return b; }
+function marked(r){ return r.writing!==null && r.writing!==undefined; }
+function levelOf(r){
+  var raw = marked(r) ? rawFull(r.auto+r.writing) : rawAuto(r.auto);
+  return BANDNAME[Math.max(raw, masteryBand(r.levels))];
+}
+function placedByMastery(r){
+  var raw = marked(r) ? rawFull(r.auto+r.writing) : rawAuto(r.auto);
+  return masteryBand(r.levels) > raw;
+}
+function isBorderline(r){
+  var v = marked(r) ? (r.auto+r.writing) : r.auto;
+  var cuts = marked(r) ? [55,75,88] : [46,63,74];
+  for(var i=0;i<cuts.length;i++) if(Math.abs(v-cuts[i])<=3) return true;
+  return false;
+}
+
+/* recompute the score from the stored raw answers — catches a tampered submission */
+function recompute(ans){
+  if(!ans) return null;
+  var tot=0;
+  function mark(bank,count,fn){
+    for(var i=1;i<=count;i++){
+      var g=(ans[bank]||{})[i];
+      if(g===undefined||String(g).trim()==="") continue;
+      if(fn(i,g)) tot+=ptsOf(bank,i);
+    }
+  }
+  mark("p1",20,function(i,g){ return g===KEY.p1[i-1]; });
+  mark("p2",12,function(i,g){ return g===KEY.p2[i-1]; });
+  mark("p3",10,function(i,g){ return g===KEY.p3[i-1]; });
+  mark("p4",8, function(i,g){ return g===KEY.p4[i-1]; });
+  mark("p5",14,function(i,g){ var a=KEY.p5[i-1].split("|"), n=norm(g);
+    for(var z=0;z<a.length;z++) if(n===a[z]) return true; return false; });
+  return tot;
+}
+
+/* ---------- api ---------- */
+function api(path, opts){
+  opts = opts||{};
+  opts.headers = Object.assign({ "apikey":ANON, "Authorization":"Bearer "+(TOK||ANON) }, opts.headers||{});
+  return fetch(API+path, opts).then(function(r){
+    if(r.status===401||r.status===403) throw new Error("auth");
+    if(!r.ok) return r.text().then(function(t){ throw new Error(t||("http "+r.status)); });
+    return r.status===204 ? null : r.json().catch(function(){ return null; });
+  });
+}
+function login(email,pass){
+  return fetch(API+"/auth/v1/token?grant_type=password",{
+    method:"POST", headers:{ "apikey":ANON, "Content-Type":"application/json" },
+    body:JSON.stringify({email:email,password:pass})
+  }).then(function(r){ return r.json().then(function(j){
+      if(!r.ok) throw new Error(j.error_description||j.msg||j.message||"Giriş başarısız");
+      return j; }); });
+}
+function loadRows(){
+  return api("/rest/v1/results?select=*&order=created_at.desc&limit=2000")
+    .then(function(d){ ROWS = d||[]; return ROWS; });
+}
+
+/* ---------- ui ---------- */
+function show(which){
+  $("s-login").hidden = which!=="login";
+  $("s-panel").hidden = which!=="panel";
+}
+function bar(got,max){
+  var pct = max ? Math.round(100*got/max) : 0;
+  var cls = pct<40 ? "low" : (pct<65 ? "mid" : "");
+  return '<span class="bar"><i class="'+cls+'" style="width:'+pct+'%"></i></span>';
+}
+function pctOf(a){ return (a&&a[1]) ? Math.round(100*a[0]/a[1]) : 0; }
+
+function diagnose(r){
+  var out=[], lv=r.levels||{}, names={1:"A1",2:"A2",3:"B1"}, p={};
+  [1,2,3].forEach(function(L){ p[L] = lv[L] ? pctOf(lv[L]) : 0; });
+  var m=0; [1,2,3].forEach(function(L){ if(p[L]>=70 && m===L-1) m=L; });
+  if(m===0) out.push("A1 maddelerinde bile %"+p[1]+" — temel kur, baştan başlamalı.");
+  else if(m===3) out.push("B1 maddelerinde %"+p[3]+" — B1 kurunu rahat taşıyor.");
+  else out.push(names[m]+" hakimiyeti sağlam (%"+p[m]+"), "+names[m+1]+" maddelerinde %"+p[m+1]+".");
+
+  var s=r.sections||{}, best=null, worst=null;
+  ["p1","p2","p3","p4","p5"].forEach(function(k){
+    var v=Math.round(100*(s[k]||0)/SECMAX[k]);
+    if(!best||v>best[1]) best=[k,v];
+    if(!worst||v<worst[1]) worst=[k,v];
+  });
+  if(best&&worst&&(best[1]-worst[1])>=28)
+    out.push("Beceri profili dengesiz: "+SECLABEL[best[0]]+" %"+best[1]+", "+SECLABEL[worst[0]]+" %"+worst[1]+
+             " — ilk haftalarda "+SECLABEL[worst[0]].toLowerCase()+" desteği gerekebilir.");
+
+  if(r.blanks>=12) out.push(r.blanks+" soru boş bırakılmış — puan gerçek seviyenin altında olabilir, sözlü teyit önerilir.");
+  else if(r.blanks<=1 && r.auto<46) out.push("Hiç boş bırakılmamış ve puan düşük — cevapların bir kısmı tahmin olabilir.");
+
+  if(r.minutes!=null && r.minutes<12 && r.auto>=63)
+    out.push("Sınav "+r.minutes+" dakikada ve yüksek puanla bitirilmiş — gözetimsiz oturumda dikkat edilmeli.");
+
+  if(placedByMastery(r))
+    out.push("Ham puan daha düşük bir band gösteriyor, ancak "+names[masteryBand(r.levels)]+" maddelerinin %"+
+             p[masteryBand(r.levels)]+"'ini doğru yapmış — hakimiyet kuralıyla "+names[masteryBand(r.levels)]+
+             " kuruna yerleştirildi.");
+
+  var rc = recompute(r.answers);
+  if(rc!==null && rc!==r.auto)
+    out.push("DİKKAT: kayıtlı puan ("+r.auto+") ham cevaplardan hesaplanan puanla ("+rc+") uyuşmuyor. Sonuç elle değiştirilmiş olabilir.");
+
+  if(!marked(r)) out.push("Yazma henüz puanlanmadı; seviye geçicidir.");
+  if(isBorderline(r)) out.push("Puan bir band sınırına 3 puandan yakın — 3 dakikalık sözlü teyit yapın.");
+  return out;
+}
+
+function detailHtml(r){
+  var s=r.sections||{}, lv=r.levels||{};
+  var h='<div class="detail">';
+  h+='<div class="block"><h5>Bölüm bazında</h5>';
+  ["p1","p2","p3","p4","p5"].forEach(function(k){
+    var got=s[k]||0, mx=SECMAX[k];
+    h+='<div class="drow"><span class="nm">'+SECLABEL[k]+'</span>'+bar(got,mx)+
+       '<span class="vl">'+got+' / '+mx+'  %'+Math.round(100*got/mx)+'</span></div>';
+  });
+  h+='<div class="drow"><span class="nm">Writing</span>'+(marked(r)?bar(r.writing,WRITE_MAX):'<span class="bar"></span>')+
+     '<span class="vl">'+(marked(r)?(r.writing+' / '+WRITE_MAX):'puanlanmadı')+'</span></div></div>';
+
+  h+='<div class="block"><h5>CEFR seviye profili — hangi seviyede kopuyor</h5>';
+  [[1,"A1"],[2,"A2"],[3,"B1"]].forEach(function(x){
+    var a=lv[x[0]]||[0,0];
+    h+='<div class="drow"><span class="nm">'+x[1]+' maddeleri</span>'+bar(a[0],a[1])+
+       '<span class="vl">'+a[0]+' / '+a[1]+'  %'+pctOf(a)+'</span></div>';
+  });
+  var c=lv[4]||[0,0];
+  if(c[1]) h+='<div class="drow"><span class="nm" style="color:var(--text-3)">B1 üstü (tavan)</span>'+bar(c[0],c[1])+
+              '<span class="vl">'+c[0]+' / '+c[1]+'</span></div>';
+  h+='</div>';
+
+  h+='<div class="block"><h5>Oturum</h5><div class="dfacts">';
+  h+='<span>Boş bırakılan: <strong>'+(r.blanks!=null?r.blanks:"—")+'</strong> soru</span>';
+  h+='<span>Süre: <strong>'+(r.minutes!=null?r.minutes+" dk":"—")+'</strong></span>';
+  h+='<span>Yazma: <strong>'+(r.words||0)+'</strong> kelime</span>';
+  if(r.groupname) h+='<span>Grup: <strong>'+esc(r.groupname)+'</strong></span>';
+  if(r.ua) h+='<span>Cihaz: '+esc(/Mobi|Android|iPhone|iPad/i.test(r.ua)?"telefon / tablet":"bilgisayar")+'</span>';
+  h+='</div></div>';
+
+  h+='<div class="block"><h5>Değerlendirme</h5>';
+  diagnose(r).forEach(function(l){ h+='<div class="verdict">'+esc(l)+'</div>'; });
+  h+='</div>';
+
+  h+='<div class="block"><h5>Yazma metni</h5><div class="wbox">'+esc(r.wtext||"(boş)")+'</div>';
+  h+='<p class="fine" style="margin:10px 0 0">Rubrik — her biri 0–5: <strong>içerik</strong> (üç soruya yanıt), <strong>düzen</strong> (bağlantı, akış), <strong>dilbilgisi</strong> (yapı çeşitliliği ve doğruluk), <strong>kelime &amp; yazım</strong>. Toplamı yukarıdaki kutuya yazın.</p></div>';
+  return h+'</div>';
+}
+
+function renderStats(){
+  var n=ROWS.length;
+  var week=ROWS.filter(function(r){ return (Date.now()-new Date(r.created_at))<7*864e5; }).length;
+  var pend=ROWS.filter(function(r){ return !marked(r); }).length;
+  var d={A1:0,A2:0,B1:0,"B1+":0};
+  ROWS.forEach(function(r){ var l=levelOf(r); d[l]=(d[l]||0)+1; });
+  var b1 = d.B1 + d["B1+"];
+  var tot = n||1;
+  var cols = {A1:"#8e8e93", A2:"var(--warn)", B1:"var(--accent)"};
+  $("stats").innerHTML =
+    '<div class="stat"><div class="k">Toplam aday</div><div class="v">'+n+'</div><div class="s">son 7 günde '+week+'</div></div>'+
+    '<div class="stat"><div class="k">Yazma bekleyen</div><div class="v">'+pend+'</div><div class="s">'+(pend?'puanlanmayı bekliyor':'hepsi tamam')+'</div></div>'+
+    '<div class="stat" style="grid-column:span 2"><div class="k">Seviye dağılımı</div>'+
+      '<div class="v" style="font-size:20px">'+d.A1+' · '+d.A2+' · '+b1+'</div>'+
+      '<div class="split">'+
+        '<i style="width:'+(100*d.A1/tot)+'%;background:'+cols.A1+'"></i>'+
+        '<i style="width:'+(100*d.A2/tot)+'%;background:'+cols.A2+'"></i>'+
+        '<i style="width:'+(100*b1/tot)+'%;background:'+cols.B1+'"></i>'+
+      '</div>'+
+      '<div class="legend"><span><b style="background:'+cols.A1+'"></b>A1 '+d.A1+'</span>'+
+      '<span><b style="background:'+cols.A2+'"></b>A2 '+d.A2+'</span>'+
+      '<span><b style="background:'+cols.B1+'"></b>B1 '+b1+'</span></div>'+
+    '</div>';
+}
+
+function render(){
+  renderStats();
+  var q=($("search").value||"").toLowerCase().trim();
+  var list = q ? ROWS.filter(function(r){
+    return ((r.name||"")+" "+(r.phone||"")+" "+(r.email||"")+" "+(r.groupname||"")).toLowerCase().indexOf(q)>=0;
+  }) : ROWS;
+
+  var tb=$("rows"); tb.innerHTML="";
+  $("emptyMsg").hidden = list.length>0;
+  $("foot").textContent = ROWS.length+" kayıt"+(q?" · "+list.length+" eşleşme":"");
+
+  list.forEach(function(r){
+    var tr=el("tr");
+    var m=marked(r), total=m?(r.auto+r.writing):null, lvl=levelOf(r);
+    var contact=[r.phone,r.email].filter(Boolean).map(esc).join("<br>")||'<span style="color:var(--text-3)">—</span>';
+    var grp=r.groupname?'<div style="color:var(--text-3);font-size:13px">'+esc(r.groupname)+'</div>':'';
+    var flag=isBorderline(r)?'<span class="flag">sınır</span>':'';
+    tr.innerHTML=
+      '<td style="white-space:nowrap;color:var(--text-2);font-size:13px">'+fmtDate(r.created_at)+'</td>'+
+      '<td><strong>'+esc(r.name)+'</strong>'+grp+'</td>'+
+      '<td style="font-size:13px;color:var(--text-2)">'+contact+'</td>'+
+      '<td class="n">'+r.auto+'</td>'+
+      '<td class="n"></td>'+
+      '<td class="n">'+(m?'<strong>'+total+'</strong>':'<span style="color:var(--text-3)">—</span>')+'</td>'+
+      '<td><span class="lvltag'+(m?' set':'')+'">'+lvl+'</span>'+flag+'</td>'+
+      '<td class="n"></td>';
+
+    var w=document.createElement("input");
+    w.type="number"; w.min="0"; w.max=String(WRITE_MAX); w.step="1";
+    w.value=m?String(r.writing):""; w.placeholder="0–"+WRITE_MAX;
+    w.setAttribute("aria-label",r.name+" yazma puanı");
+    w.addEventListener("change",function(){
+      var v = w.value==="" ? null : Math.max(0,Math.min(WRITE_MAX,Math.round(Number(w.value))));
+      w.disabled=true;
+      api("/rest/v1/results?id=eq."+encodeURIComponent(r.id),{
+        method:"PATCH",
+        headers:{ "Content-Type":"application/json", "Prefer":"return=minimal" },
+        body:JSON.stringify({writing:v})
+      }).then(function(){ r.writing=v; w.disabled=false; render(); toast("Yazma puanı kaydedildi."); })
+        .catch(function(e){ w.disabled=false; toast(e.message==="auth"?"Oturum süresi doldu, tekrar girin.":"Kaydedilemedi."); });
+    });
+    tr.children[4].appendChild(w);
+
+    var act=el("div"); act.style.cssText="display:flex;gap:6px;justify-content:flex-end";
+    var bd=document.createElement("button");
+    bd.className="tiny"; bd.type="button"; bd.textContent="Detay";
+    bd.addEventListener("click",function(){
+      var ex=$("dt_"+r.id);
+      if(ex){ ex.parentNode.removeChild(ex); tr.classList.remove("open"); bd.textContent="Detay"; return; }
+      var dr=el("tr"); dr.id="dt_"+r.id;
+      var td=el("td",null,detailHtml(r)); td.colSpan=8; td.style.background="transparent";
+      dr.appendChild(td); tr.parentNode.insertBefore(dr,tr.nextSibling);
+      tr.classList.add("open"); bd.textContent="Kapat";
+    });
+    var bx=document.createElement("button");
+    bx.className="tiny"; bx.type="button"; bx.textContent="Sil";
+    bx.addEventListener("click",function(){
+      if(!confirm(r.name+" kaydı kalıcı olarak silinsin mi?")) return;
+      api("/rest/v1/results?id=eq."+encodeURIComponent(r.id),{method:"DELETE",headers:{"Prefer":"return=minimal"}})
+        .then(function(){ ROWS=ROWS.filter(function(x){return x.id!==r.id;}); render(); toast("Silindi."); })
+        .catch(function(){ toast("Silinemedi."); });
+    });
+    act.appendChild(bd); act.appendChild(bx);
+    tr.children[7].appendChild(act);
+    tb.appendChild(tr);
+  });
+}
+
+/* ---------- events ---------- */
+$("btnLogin").addEventListener("click",function(){
+  var e=$("em").value.trim(), p=$("pw").value;
+  if(!e||!p){ $("loginMsg").innerHTML="<span style='color:var(--alert)'>E-posta ve şifre gerekli.</span>"; return; }
+  $("loginMsg").innerHTML="<span class='spin'></span>Giriş yapılıyor…";
+  login(e,p).then(function(j){
+    TOK=j.access_token;
+    try{ sessionStorage.setItem("stq.tok",TOK); }catch(err){}
+    $("pw").value=""; $("loginMsg").textContent="";
+    return loadRows();
+  }).then(function(){ show("panel"); render(); })
+    .catch(function(err){ $("loginMsg").innerHTML="<span style='color:var(--alert)'>"+esc(err.message)+"</span>"; });
+});
+$("pw").addEventListener("keydown",function(e){ if(e.key==="Enter") $("btnLogin").click(); });
+$("em").addEventListener("keydown",function(e){ if(e.key==="Enter") $("pw").focus(); });
+$("search").addEventListener("input",render);
+$("btnRefresh").addEventListener("click",function(){
+  loadRows().then(function(){ render(); toast("Güncellendi."); })
+            .catch(function(){ toast("Yenilenemedi."); });
+});
+$("btnOut").addEventListener("click",function(){
+  TOK=null; try{ sessionStorage.removeItem("stq.tok"); }catch(e){}
+  ROWS=[]; show("login");
+});
+$("btnCsv").addEventListener("click",function(){
+  if(!ROWS.length){ toast("Kopyalanacak kayıt yok."); return; }
+  var head=["Tarih","Ad Soyad","Telefon","E-posta","Grup",
+            "Use of English /20","Reading /20","Cloze /10","Listening /16","Dictation /14",
+            "A1 %","A2 %","B1 %","Boş","Süre dk","Kelime",
+            "Otomatik /80","Yazma /20","Toplam /100","Seviye","Sınır"];
+  var out=[head.join(";")];
+  ROWS.forEach(function(r){
+    var s=r.sections||{}, lv=r.levels||{}, m=marked(r);
+    out.push([fmtDatePlain(r.created_at), r.name, r.phone, r.email, r.groupname,
+      s.p1,s.p2,s.p3,s.p4,s.p5,
+      lv[1]?pctOf(lv[1]):"", lv[2]?pctOf(lv[2]):"", lv[3]?pctOf(lv[3]):"",
+      r.blanks, r.minutes, r.words,
+      r.auto, m?r.writing:"", m?(r.auto+r.writing):"", levelOf(r), isBorderline(r)?"evet":""
+    ].map(function(v){ return String(v==null?"":v).replace(/;/g,","); }).join(";"));
+  });
+  var csv=out.join("\n");
+  if(navigator.clipboard&&navigator.clipboard.writeText)
+    navigator.clipboard.writeText(csv).then(function(){ toast(ROWS.length+" kayıt kopyalandı — Excel'e yapıştırın."); },
+                                            function(){ window.prompt("Kopyalayın:",csv); });
+  else window.prompt("Kopyalayın:",csv);
+});
+
+/* ---------- boot ---------- */
+(function(){
+  if(CFG.SCHOOL_NAME){ $("brandL").textContent=CFG.SCHOOL_NAME+" · Yönetici"; $("brandP").textContent=CFG.SCHOOL_NAME+" · Yönetici"; }
+  if(!API || !ANON || API.indexOf("http")!==0 || ANON.length<20){
+    $("s-login").insertAdjacentHTML("afterbegin",
+      '<div class="warnbox" style="max-width:420px;margin:0 auto 20px"><strong>Kurulum tamamlanmadı.</strong> <code>config.js</code> içindeki Supabase bilgileri doldurulmamış.</div>');
+    return;
+  }
+  var t=null; try{ t=sessionStorage.getItem("stq.tok"); }catch(e){}
+  if(t){
+    TOK=t;
+    loadRows().then(function(){ show("panel"); render(); })
+              .catch(function(){ TOK=null; show("login"); });
+  } else show("login");
+})();
+
+</script>
+</body>
+</html>
