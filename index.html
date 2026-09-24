@@ -4,44 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#fbfbfd">
+<meta name="theme-color" content="#fbfbfc">
 <title>İngilizce Seviye Sınavı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
 <script src="config.js"></script>
 <style>
   :root{
-    --bg:#fbfbfd; --surface:#ffffff; --surface-2:#f2f2f5; --surface-3:#e7e7ec;
-    --text:#1d1d1f; --text-2:#6e6e73; --text-3:#8e8e93;
-    --line:rgba(0,0,0,.09); --line-2:rgba(0,0,0,.17);
-    --accent:#0071e3; --accent-soft:rgba(0,113,227,.09); --accent-mid:rgba(0,113,227,.18);
+    --bg:#fbfbfc; --surface:#ffffff; --surface-2:#f3f5f8; --surface-3:#e6e8ec;
+    --text:#10243a; --text-2:#5b6572; --text-3:#8c96a2;
+    --line:#e6e8ec; --line-2:#d3d8df;
+    --accent:#1b4f9c; --accent-soft:rgba(27,79,156,.09); --accent-mid:rgba(27,79,156,.18);
     --alert:#c7361f; --alert-soft:rgba(199,54,31,.10);
     --ok:#1c7a4a; --warn:#8a6100;
-    --shadow:0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.055);
-    --r-lg:20px; --r-md:14px; --r-sm:10px;
+    --shadow:none;
+    --r-lg:16px; --r-md:12px; --r-sm:10px;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
-      --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
-      --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
-      --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
-      --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
-      --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+      --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --surface-3:#2a3541;
+      --text:#eef2f6; --text-2:#9fadbc; --text-3:#7c8a99;
+      --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.20);
+      --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14); --accent-mid:rgba(123,167,229,.26);
+      --alert:#ff7f68; --alert-soft:rgba(255,127,104,.14);
+      --ok:#5ed394; --warn:#e3b341; --shadow:none;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
-    --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
-    --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
-    --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
-    --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
-    --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+    --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --surface-3:#2a3541;
+    --text:#eef2f6; --text-2:#9fadbc; --text-3:#7c8a99;
+    --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.20);
+    --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14); --accent-mid:rgba(123,167,229,.26);
+    --alert:#ff7f68; --alert-soft:rgba(255,127,104,.14);
+    --ok:#5ed394; --warn:#e3b341; --shadow:none;
   }
 
   *{box-sizing:border-box}
   html,body{margin:0}
   body{
     background:var(--bg); color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+    font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
     font-size:17px; line-height:1.55; letter-spacing:-0.011em; -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:720px;margin:0 auto;padding-inline:20px}
@@ -70,7 +73,19 @@
   .fine{font-size:14.5px;color:var(--text-2)}
   section.screen{padding-block:38px 90px}
 
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:24px 22px}
+  /* Giriş ekranı başlığı — A · Sakin kurumsal */
+  .hero{display:flex;flex-direction:column;gap:13px;margin-bottom:0}
+  .hero h1{margin:0}
+  .hero .sub{margin:0}
+  .brandline{display:flex;align-items:center;gap:10px}
+  .brandline i{display:block;width:26px;height:2px;background:var(--accent);flex:none}
+  .brandline b{font-size:11px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase}
+  .metarow{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding-top:2px}
+  .metarow span{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--text-2)}
+  .metarow svg{flex:none}
+  .rulebar{height:1px;background:var(--line);margin:24px 0}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px 22px}
   .card.quiet{box-shadow:none;background:var(--surface-2);border-color:transparent}
   .card + .card{margin-top:18px}
 
@@ -184,15 +199,34 @@
   .note.warn{border-left-color:var(--alert);background:var(--alert-soft)}
   .chips{display:flex;flex-wrap:wrap;gap:8px}
   .chip{font-size:13px;color:var(--text-2);background:var(--surface-2);border-radius:999px;padding:5px 12px}
-  ul.clean{margin:0;padding-left:1.15em}
-  ul.clean li{margin-bottom:7px}
+  ul.clean{margin:0;padding-left:0;list-style:none}
+  ul.clean li{margin-bottom:9px;position:relative;padding-left:18px}
+  ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--accent)}
   ul.clean li:last-child{margin-bottom:0}
   .footrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px}
   .footrow .left{flex:1;min-width:120px;font-size:14px;color:var(--text-2)}
 
-  .levelbox{text-align:center;padding:38px 20px}
-  .levelbig{font-size:76px;font-weight:600;letter-spacing:-0.045em;line-height:1;margin-bottom:10px}
-  .levelname{font-size:19px;color:var(--text-2)}
+  .levelbox{text-align:center;padding:32px 22px}
+  .levelbig{font-size:64px;font-weight:600;letter-spacing:-0.045em;line-height:1;margin-bottom:8px}
+  .levelbig.two{font-size:46px;letter-spacing:-0.035em}
+  .levelname{font-size:17px;color:var(--text-2)}
+  .scoreline{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:15px;color:var(--text-2)}
+  .scoreline strong{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+  /* ---- A1–B1 derece çubuğu ---- */
+  .scaleWrap{position:relative;padding-top:24px;margin-top:22px}
+  .scaleTrack{display:flex;gap:3px;height:12px}
+  .scaleTrack i{flex:1;background:var(--accent);border-radius:3px}
+  .scaleTrack i:nth-child(1){opacity:.22;border-radius:6px 3px 3px 6px}
+  .scaleTrack i:nth-child(2){opacity:.44}
+  .scaleTrack i:nth-child(3){opacity:.70;border-radius:3px 6px 6px 3px}
+  .pin{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;transition:left .5s cubic-bezier(.22,.7,.3,1)}
+  @media (prefers-reduced-motion: reduce){.pin{transition:none}}
+  .pin .dot{display:block;width:12px;height:12px;border-radius:50%;background:var(--text)}
+  .pin .stem{display:block;width:2px;height:10px;background:var(--text)}
+  .scaleLabels{display:flex;gap:3px;margin-top:10px}
+  .scaleLabels span{flex:1;text-align:center;font-size:12.5px;font-weight:600;color:var(--text-2)}
+  .scaleLabels span.on{color:var(--accent)}
+
 
   .adminbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
   .adminbar .grow{flex:1;min-width:140px}
@@ -254,15 +288,16 @@
 
 <!-- ===================== WELCOME ===================== -->
 <section class="screen" id="s-welcome">
-  <p class="kicker" id="brand">Seviye tespit · A1 – A2 – B1</p>
-  <h1>İngilizce Seviye Sınavı</h1>
-  <p class="sub">Altı bölüm, 38 dakika. Sonunda seviyeniz ekranda görünür.</p>
-
-  <div class="chips" style="margin-bottom:26px">
-    <span class="chip">64 soru + 1 yazma</span>
-    <span class="chip">Dinleme ve dikte sesli</span>
-    <span class="chip">CEFR A1 – B1</span>
+  <div class="hero">
+    <div class="brandline"><i></i><b id="brand">Sarıyer Eğitim Merkezi</b></div>
+    <h1>İngilizce Seviye Sınavı</h1>
+    <p class="sub">Altı bölüm, 38 dakika. Sonunda seviyeniz ekranda görünür.</p>
+    <div class="metarow">
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>38 dakika</span>
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h10"></path></svg>Altı bölüm</span>
+    </div>
   </div>
+  <div class="rulebar"></div>
 
   <div class="card">
     <h3>Bilgileriniz</h3>
@@ -272,7 +307,7 @@
     </div>
     <div class="grid2">
       <div class="field">
-        <label for="fPhone">Telefon <span style="color:var(--text-3)">(isteğe bağlı)</span></label>
+        <label for="fPhone">Telefon</label>
         <input type="tel" id="fPhone" autocomplete="tel" placeholder="05xx xxx xx xx">
       </div>
       <div class="field">
@@ -280,6 +315,7 @@
         <input type="email" id="fMail" autocomplete="email" placeholder="ornek@eposta.com">
       </div>
     </div>
+    <p class="fine" style="margin:0 0 4px">Ad ve telefon zorunludur — sınav sonucunuz için sizinle iletişime geçeceğiz.</p>
     <div class="field">
       <label for="fGroup">Grup / kayıt kodu <span style="color:var(--text-3)">(isteğe bağlı)</span></label>
       <input type="text" id="fGroup" placeholder="Örn. 2026-Güz">
@@ -447,16 +483,24 @@
 
 <!-- ===================== RESULT ===================== -->
 <section class="screen" id="s-result" hidden>
-  <p class="kicker">Sonuç</p>
+  <p class="kicker">Ön sonuç</p>
   <h2 id="rHead">Sınav tamamlandı</h2>
-  <p class="sub">Teşekkür ederiz. Sonucunuz kaydedildi.</p>
+  <p class="sub">Teşekkür ederiz, sonucunuz kaydedildi.</p>
   <div class="card levelbox">
-    <p class="fine" style="margin-bottom:6px">Ortalama seviyeniz</p>
+    <p class="fine" style="margin-bottom:6px">Ön seviyeniz</p>
     <div class="levelbig" id="rLevel">A2</div>
-    <div class="levelname" id="rName2">Elementary</div>
+    <div class="levelname" id="rName2">Temel</div>
+    <div class="scaleWrap">
+      <div class="pin" id="rPin" style="left:50%"><span class="dot"></span><span class="stem"></span></div>
+      <div class="scaleTrack"><i></i><i></i><i></i></div>
+      <div class="scaleLabels" id="rLabels"><span>A1</span><span>A2</span><span>B1</span></div>
+    </div>
+    <div class="scoreline">Otomatik puanınız <strong id="rScore">— / 80</strong></div>
   </div>
-  <p class="fine" id="rSaving" style="margin-top:18px;text-align:center" hidden></p>
-  <p class="fine" style="margin-top:12px;text-align:center">Yazma bölümünüz öğretmen tarafından okunduktan sonra seviyeniz kesinleşir.</p>
+  <div class="note" style="margin-top:18px">
+    <strong>Bu bir ön sonuçtur.</strong> Yazma bölümünüz öğretmenimiz tarafından değerlendirilecek ve <strong>kesin seviyeniz için sizinle iletişime geçilecek.</strong> Bu bir yerleştirme sınavıdır; geçme veya kalma yoktur.
+  </div>
+  <p class="fine" id="rSaving" style="margin-top:16px;text-align:center" hidden></p>
   <p class="fine" id="rContact" style="margin-top:12px;text-align:center;color:var(--text-3)"></p>
   <div class="footrow" style="justify-content:center">
     <button id="btnAgain" type="button">Yeni sınav başlat</button>
@@ -814,7 +858,8 @@ function playFile(key, btn){
   if(!a){ playTTS(key,btn); return; }
   var started=false, done=false, watch=null, last=0;
   function clean(){ a.onplaying=null; a.onended=null; a.onerror=null; if(watch){ clearInterval(watch); watch=null; } }
-  function finish(){ if(done)return; done=true; clean(); try{a.pause();}catch(e){} release(true); }
+  
+function finish(){ if(done)return; done=true; clean(); try{a.pause();}catch(e){} release(true); }
   function toTTS(){
     if(done)return; done=true; clean();
     try{ a.pause(); }catch(e){}
@@ -1177,11 +1222,12 @@ function rawFull(t){ if(t>=88) return 4; if(t>=75) return 3; if(t>=55) return 2;
 /* Safety net: a candidate who genuinely mastered a level (>=70% of that
    level's points, and of every level below it) is never placed under it.
    Guessing averages 22-33%, so this can only lift a real performance. */
-function masteryBand(lv){
+function masteryBand(lv, thr){
+  thr = thr || 0.70;
   var best = 0;
   for(var L=1; L<=3; L++){
     var a = lv && lv[L];
-    if(a && a[1] && (a[0]/a[1]) >= 0.70) best = L; else break;
+    if(a && a[1] && (a[0]/a[1]) >= thr) best = L; else break;
   }
   return best;
 }
@@ -1205,6 +1251,70 @@ function isBorderline(rec){
   return false;
 }
 
+/* ===================== DERECE ÖLÇEĞİ =====================
+   Beş kademe: A1 · A1–A2 · A2 · A2–B1 · B1.
+   Geçiş kademeleri, kesme puanlarının etrafındaki ölçüm belirsizliği
+   bandıdır: sınırdaki adaya yanlış bir kesinlik yüklemek yerine iki
+   seviye arasında olduğunu söyler. Bant genişliği simülasyonla
+   belirlendi (otomatik puanda ±3, yazma dahilken ±4). */
+
+var GRADES     = ["A1", "A1 – A2", "A2", "A2 – B1", "B1"];
+var GRADEDESC  = ["Başlangıç", "Başlangıç ile temel arası", "Temel",
+                  "Temel ile orta arası", "Orta"];
+var GRADESEG   = [[0], [0,1], [1], [1,2], [2]];   /* hangi dilim etiketleri vurgulanır */
+
+function rawBand(x, cuts){ return x >= cuts[1] ? 3 : (x >= cuts[0] ? 2 : 1); }
+
+function scaleOf(marked, auto, writing){
+  return marked
+    ? { x: auto + writing, cuts: [55, 75], w: 4, lo: 17, hi: 100 }
+    : { x: auto,           cuts: [46, 63], w: 3, lo: 17, hi: 80 };
+}
+
+function grade5(x, lv, cuts, w){
+  var rb = rawBand(x, cuts);
+  /* İki kademeli hakimiyet güvenlik ağı.
+     %80+ : seviye kanıtlanmıştır — ham puanı düşük kalsa bile saf kademe.
+            (Çok soru boş bırakan dürüst adayı kurtarır.)
+     %70-80: zayıf kanıt — yalnızca bandı yükseltir, geçiş kademesi işler.
+     Tahminle bu eşikler aşılamaz; şans %22-33 civarındadır. */
+  var proven = masteryBand(lv, 0.80);
+  if(proven > rb) return proven === 2 ? 2 : 4;
+  var b = Math.max(rb, masteryBand(lv, 0.70));
+  if(b === 1) return x >= cuts[0] - w ? 1 : 0;
+  if(b === 2){
+    if(x <  cuts[0] + w) return 1;
+    if(x >= cuts[1] - w) return 3;
+    return 2;
+  }
+  return x < cuts[1] + w ? 3 : 4;
+}
+
+function barPos(x, lv, s){
+  var c1 = s.cuts[0], c2 = s.cuts[1], p;
+  if(x <= c1)      p = (x - s.lo) / (c1 - s.lo) * 33.3;
+  else if(x <= c2) p = 33.3 + (x - c1) / (c2 - c1) * 33.3;
+  else             p = 66.6 + (x - c2) / (s.hi - c2) * 33.4;
+  p = Math.max(1.5, Math.min(98.5, p));
+  /* Hakimiyet kuralı yukarı çektiyse işaretçi de o dilime taşınsın —
+     ama dilimin başına kadar, daha ileriye değil; yoksa düşük puanlı
+     bir aday yüksek puanlıdan daha sağda görünürdü. */
+  var mb=masteryBand(lv,0.70);
+  if(mb>=2) p=Math.max(p, mb===2 ? 34.5 : 67.5);
+  return p;
+}
+
+function paintScale(g, pos, elLevel, elDesc, elPin, elLabels){
+  elLevel.textContent = GRADES[g];
+  elLevel.classList.toggle("two", g === 1 || g === 3);
+  if(elDesc) elDesc.textContent = GRADEDESC[g];
+  elPin.style.left = pos.toFixed(1) + "%";
+  if(elLabels){
+    for(var i = 0; i < elLabels.length; i++)
+      elLabels[i].classList.toggle("on", GRADESEG[g].indexOf(i) >= 0);
+  }
+}
+
 function finish(){
   if(tick){ clearInterval(tick); tick=null; }
   stopAudio();
@@ -1223,10 +1333,13 @@ function finish(){
     answers:{p1:ST.a.p1,p2:ST.a.p2,p3:ST.a.p3,p4:ST.a.p4,p5:ST.a.p5},
     words: wtxt ? wtxt.split(/\s+/).length : 0, text:wtxt
   };
-  var lvl=levelOf(rec);
+  var sc = scaleOf(false, auto, null);
+  var g  = grade5(sc.x, rec.lv, sc.cuts, sc.w);
+  var lvl = GRADES[g];
   $("bar").hidden=true;
-  $("rLevel").textContent = (lvl==="B1+") ? "B1" : lvl;
-  $("rName2").textContent = LEVELNAME[lvl==="B1+"?"B1":lvl]||"";
+  paintScale(g, barPos(sc.x, rec.lv, sc), $("rLevel"), $("rName2"), $("rPin"),
+             $("rLabels").querySelectorAll("span"));
+  $("rScore").textContent = auto + " / " + AUTO_MAX;
   $("rHead").textContent = rec.name;
   $("rSaving").hidden=false;
   $("rSaving").textContent="Sonucunuz kaydediliyor…";
@@ -1266,7 +1379,9 @@ setInterval(function(){ if(ST.part===5) save(); },5000);
 
 $("btnStart").addEventListener("click",function(){
   var n=$("fName").value.trim();
-  if(!n){ $("fName").focus(); toast("Lütfen adınızı yazın."); return; }
+  if(n.length<3){ $("fName").focus(); toast("Lütfen ad ve soyadınızı yazın."); return; }
+  var tel=$("fPhone").value.trim();
+  if(tel.replace(/\D/g,"").length<10){ $("fPhone").focus(); toast("Lütfen telefon numaranızı yazın — sonucunuz için gerekli."); return; }
   primeAudio();
   ST=blank();
   ST.name=n; ST.phone=$("fPhone").value.trim(); ST.mail=$("fMail").value.trim(); ST.group=$("fGroup").value.trim();
@@ -1281,7 +1396,10 @@ $("btnAgain").addEventListener("click",function(){
 window.addEventListener("beforeunload",function(){ if(ST.part>=0&&!ST.done) save(); });
 
 (function boot(){
-  if(CFG.SCHOOL_NAME) $("brand").textContent = CFG.SCHOOL_NAME + " · Seviye tespit · A1 – A2 – B1";
+  if(CFG.SCHOOL_NAME){
+    $("brand").textContent = CFG.SCHOOL_NAME;
+    document.title = CFG.SCHOOL_NAME + " · İngilizce Seviye Sınavı";
+  }
   if(CFG.CONTACT_LINE) $("rContact").textContent = CFG.CONTACT_LINE;
   initClips();
   flushOutbox();

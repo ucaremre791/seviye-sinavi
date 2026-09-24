@@ -5,42 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Sınav Sonuçları</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
 <script src="config.js"></script>
 <style>
   :root{
-    --bg:#fbfbfd; --surface:#ffffff; --surface-2:#f2f2f5; --surface-3:#e7e7ec;
-    --text:#1d1d1f; --text-2:#6e6e73; --text-3:#8e8e93;
-    --line:rgba(0,0,0,.09); --line-2:rgba(0,0,0,.17);
-    --accent:#0071e3; --accent-soft:rgba(0,113,227,.09); --accent-mid:rgba(0,113,227,.18);
+    --bg:#fbfbfc; --surface:#ffffff; --surface-2:#f3f5f8; --surface-3:#e6e8ec;
+    --text:#10243a; --text-2:#5b6572; --text-3:#8c96a2;
+    --line:#e6e8ec; --line-2:#d3d8df;
+    --accent:#1b4f9c; --accent-soft:rgba(27,79,156,.09); --accent-mid:rgba(27,79,156,.18);
     --alert:#c7361f; --alert-soft:rgba(199,54,31,.10);
     --ok:#1c7a4a; --warn:#8a6100;
-    --shadow:0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.055);
-    --r-lg:20px; --r-md:14px; --r-sm:10px;
+    --shadow:none;
+    --r-lg:16px; --r-md:12px; --r-sm:10px;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
-      --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
-      --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
-      --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
-      --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
-      --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+      --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --surface-3:#2a3541;
+      --text:#eef2f6; --text-2:#9fadbc; --text-3:#7c8a99;
+      --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.20);
+      --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14); --accent-mid:rgba(123,167,229,.26);
+      --alert:#ff7f68; --alert-soft:rgba(255,127,104,.14);
+      --ok:#5ed394; --warn:#e3b341; --shadow:none;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --surface-3:#3a3a3c;
-    --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#8e8e93;
-    --line:rgba(255,255,255,.11); --line-2:rgba(255,255,255,.23);
-    --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-mid:rgba(41,151,255,.26);
-    --alert:#ff6b52; --alert-soft:rgba(255,107,82,.14);
-    --ok:#4ad07d; --warn:#e3b341; --shadow:none;
+    --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --surface-3:#2a3541;
+    --text:#eef2f6; --text-2:#9fadbc; --text-3:#7c8a99;
+    --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.20);
+    --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14); --accent-mid:rgba(123,167,229,.26);
+    --alert:#ff7f68; --alert-soft:rgba(255,127,104,.14);
+    --ok:#5ed394; --warn:#e3b341; --shadow:none;
   }
 
   *{box-sizing:border-box}
   html,body{margin:0}
   body{
     background:var(--bg); color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+    font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
     font-size:17px; line-height:1.55; letter-spacing:-0.011em; -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:720px;margin:0 auto;padding-inline:20px}
@@ -69,7 +72,7 @@
   .fine{font-size:14.5px;color:var(--text-2)}
   section.screen{padding-block:38px 90px}
 
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:24px 22px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px 22px}
   .card.quiet{box-shadow:none;background:var(--surface-2);border-color:transparent}
   .card + .card{margin-top:18px}
 
@@ -183,8 +186,9 @@
   .note.warn{border-left-color:var(--alert);background:var(--alert-soft)}
   .chips{display:flex;flex-wrap:wrap;gap:8px}
   .chip{font-size:13px;color:var(--text-2);background:var(--surface-2);border-radius:999px;padding:5px 12px}
-  ul.clean{margin:0;padding-left:1.15em}
-  ul.clean li{margin-bottom:7px}
+  ul.clean{margin:0;padding-left:0;list-style:none}
+  ul.clean li{margin-bottom:9px;position:relative;padding-left:18px}
+  ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--accent)}
   ul.clean li:last-child{margin-bottom:0}
   .footrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px}
   .footrow .left{flex:1;min-width:120px;font-size:14px;color:var(--text-2)}
@@ -257,6 +261,18 @@
   .split i{display:block;height:100%}
   .legend{display:flex;gap:12px;margin-top:8px;font-size:12.5px;color:var(--text-2);flex-wrap:wrap}
   .legend b{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0}
+  .scaleWrap{position:relative;padding-top:22px;margin:4px 0 2px}
+  .scaleTrack{display:flex;gap:3px;height:10px}
+  .scaleTrack i{flex:1;background:var(--accent);border-radius:3px}
+  .scaleTrack i:nth-child(1){opacity:.22;border-radius:5px 3px 3px 5px}
+  .scaleTrack i:nth-child(2){opacity:.44}
+  .scaleTrack i:nth-child(3){opacity:.70;border-radius:3px 5px 5px 3px}
+  .pin{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+  .pin .dot{display:block;width:11px;height:11px;border-radius:50%;background:var(--text)}
+  .pin .stem{display:block;width:2px;height:9px;background:var(--text)}
+  .scaleLabels{display:flex;gap:3px;margin-top:8px}
+  .scaleLabels span{flex:1;text-align:center;font-size:12px;font-weight:600;color:var(--text-2)}
+  .scaleLabels span.on{color:var(--accent)}
   .warnbox{border-left:3px solid var(--alert);background:var(--alert-soft);border-radius:0 var(--r-md) var(--r-md) 0;padding:13px 16px;font-size:15px;margin-bottom:20px}
   .loginwrap{max-width:420px;margin:60px auto}
   .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line-2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
@@ -268,7 +284,7 @@
 
 <section class="screen" id="s-login">
   <div class="loginwrap">
-    <p class="kicker" id="brandL">Yönetici</p>
+    <p class="kicker" id="brandL">Sarıyer Eğitim Merkezi · Yönetici</p>
     <h2 style="margin-bottom:22px">Sınav sonuçları</h2>
     <div class="card">
       <div class="field">
@@ -289,7 +305,7 @@
 </section>
 
 <section class="screen" id="s-panel" hidden>
-  <p class="kicker" id="brandP">Yönetici</p>
+  <p class="kicker" id="brandP">Sarıyer Eğitim Merkezi · Yönetici</p>
   <h2>Sınav sonuçları</h2>
   <p class="sub">Bütün cihazlardan gelen sonuçlar. Bir satırı açmak için <strong>Detay</strong>'a basın.</p>
 
@@ -377,26 +393,69 @@ function fmtDate(iso){ var d=new Date(iso);
 function fmtDatePlain(iso){ var d=new Date(iso);
   return pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear()+" "+pad(d.getHours())+":"+pad(d.getMinutes()); }
 
-/* ---------- placement ---------- */
-var BANDNAME={1:"A1",2:"A2",3:"B1",4:"B1+"};
-function rawAuto(a){ if(a>=74)return 4; if(a>=63)return 3; if(a>=46)return 2; return 1; }
-function rawFull(t){ if(t>=88)return 4; if(t>=75)return 3; if(t>=55)return 2; return 1; }
-function masteryBand(lv){ var b=0;
-  for(var L=1;L<=3;L++){ var a=lv&&lv[L]; if(a&&a[1]&&(a[0]/a[1])>=0.70) b=L; else break; }
-  return b; }
+/* ---------- beş kademeli yerleştirme (sınav sayfasıyla birebir aynı) ---------- */
+var GRADES    = ["A1", "A1 – A2", "A2", "A2 – B1", "B1"];
+var GRADEDESC = ["Başlangıç", "Başlangıç ile temel arası", "Temel",
+                 "Temel ile orta arası", "Orta"];
+var GRADESEG  = [[0], [0,1], [1], [1,2], [2]];
+
+function masteryBand(lv, thr){
+  thr = thr || 0.70;
+  var b = 0;
+  for(var L=1;L<=3;L++){ var a=lv&&lv[L]; if(a&&a[1]&&(a[0]/a[1])>=thr) b=L; else break; }
+  return b;
+}
 function marked(r){ return r.writing!==null && r.writing!==undefined; }
-function levelOf(r){
-  var raw = marked(r) ? rawFull(r.auto+r.writing) : rawAuto(r.auto);
-  return BANDNAME[Math.max(raw, masteryBand(r.levels))];
+function rawBand(x, cuts){ return x>=cuts[1] ? 3 : (x>=cuts[0] ? 2 : 1); }
+function scaleOf(r){
+  return marked(r)
+    ? { x:r.auto+r.writing, cuts:[55,75], w:4, lo:17, hi:100 }
+    : { x:r.auto,           cuts:[46,63], w:3, lo:17, hi:80  };
+}
+function grade5(x, lv, cuts, w){
+  var rb = rawBand(x, cuts);
+  var proven = masteryBand(lv, 0.80);
+  if(proven > rb) return proven === 2 ? 2 : 4;
+  var b = Math.max(rb, masteryBand(lv, 0.70));
+  if(b === 1) return x >= cuts[0]-w ? 1 : 0;
+  if(b === 2){
+    if(x <  cuts[0]+w) return 1;
+    if(x >= cuts[1]-w) return 3;
+    return 2;
+  }
+  return x < cuts[1]+w ? 3 : 4;
+}
+function gradeOf(r){ var s=scaleOf(r); return grade5(s.x, r.levels, s.cuts, s.w); }
+function levelOf(r){ return GRADES[gradeOf(r)]; }
+function barPos(r){
+  var s=scaleOf(r), x=s.x, c1=s.cuts[0], c2=s.cuts[1], p;
+  if(x<=c1)      p=(x-s.lo)/(c1-s.lo)*33.3;
+  else if(x<=c2) p=33.3+(x-c1)/(c2-c1)*33.3;
+  else           p=66.6+(x-c2)/(s.hi-c2)*33.4;
+  p=Math.max(1.5,Math.min(98.5,p));
+  var mb=masteryBand(r.levels,0.70);
+  if(mb>=2) p=Math.max(p, mb===2 ? 34.5 : 67.5);
+  return p;
 }
 function placedByMastery(r){
-  var raw = marked(r) ? rawFull(r.auto+r.writing) : rawAuto(r.auto);
-  return masteryBand(r.levels) > raw;
+  var s=scaleOf(r);
+  return masteryBand(r.levels,0.70) > rawBand(s.x, s.cuts);
 }
-function isBorderline(r){
-  var v = marked(r) ? (r.auto+r.writing) : r.auto;
-  var cuts = marked(r) ? [55,75,88] : [46,63,74];
-  for(var i=0;i<cuts.length;i++) if(Math.abs(v-cuts[i])<=3) return true;
+/* Sınır etiketi artık "sözlü teyit yap" demek: çok boş bırakmış,
+   şüpheli hızlı bitirmiş ya da beceri profili çok dengesiz adaylar. */
+function needsCheck(r){
+  if(r.blanks >= 26) return true;                       /* sınavın yarısı boş */
+  if(r.blanks >= 18 && r.auto >= 46) return true;       /* puan seviyeyi eksik gösteriyor olabilir */
+  if(r.minutes != null && r.minutes < 12 && r.auto >= 63) return true;
+  var s=r.sections||{}, best=null, worst=null;
+  ["p1","p2","p3","p4","p5"].forEach(function(k){
+    var v=Math.round(100*(s[k]||0)/SECMAX[k]);
+    if(best===null||v>best) best=v;
+    if(worst===null||v<worst) worst=v;
+  });
+  if(best!==null && best>=55 && (best-worst)>=50) return true;
+  var rc = recompute(r.answers);
+  if(rc!==null && rc!==r.auto) return true;
   return false;
 }
 
@@ -473,7 +532,8 @@ function diagnose(r){
     out.push("Beceri profili dengesiz: "+SECLABEL[best[0]]+" %"+best[1]+", "+SECLABEL[worst[0]]+" %"+worst[1]+
              " — ilk haftalarda "+SECLABEL[worst[0]].toLowerCase()+" desteği gerekebilir.");
 
-  if(r.blanks>=12) out.push(r.blanks+" soru boş bırakılmış — puan gerçek seviyenin altında olabilir, sözlü teyit önerilir.");
+  if(r.blanks>=26) out.push(r.blanks+" soru boş bırakılmış — sınavın yarısına yakını cevapsız, puan seviyeyi temsil etmiyor olabilir.");
+  else if(r.blanks>=18 && r.auto>=46) out.push(r.blanks+" soru boş bırakılmış ama puan iyi — aday bildiğini yapıp gerisini atlamış, gerçek seviyesi bu puanın üstünde olabilir.");
   else if(r.blanks<=1 && r.auto<46) out.push("Hiç boş bırakılmamış ve puan düşük — cevapların bir kısmı tahmin olabilir.");
 
   if(r.minutes!=null && r.minutes<12 && r.auto>=63)
@@ -489,13 +549,28 @@ function diagnose(r){
     out.push("DİKKAT: kayıtlı puan ("+r.auto+") ham cevaplardan hesaplanan puanla ("+rc+") uyuşmuyor. Sonuç elle değiştirilmiş olabilir.");
 
   if(!marked(r)) out.push("Yazma henüz puanlanmadı; seviye geçicidir.");
-  if(isBorderline(r)) out.push("Puan bir band sınırına 3 puandan yakın — 3 dakikalık sözlü teyit yapın.");
+  var g0=gradeOf(r);
+  if(g0===1||g0===3) out.push("Geçiş kademesinde ("+GRADES[g0]+") — iki kur da mümkün. 3 dakikalık sözlü teyit kararı netleştirir.");
+  if(needsCheck(r)) out.push("Sözlü teyit önerilir: aşağıdaki işaretlerden en az biri var — çok boş bırakma, şüpheli hızlı bitirme, çok dengesiz beceri profili ya da puan tutarsızlığı.");
   return out;
 }
 
 function detailHtml(r){
   var s=r.sections||{}, lv=r.levels||{};
+  var g=gradeOf(r), pos=barPos(r);
   var h='<div class="detail">';
+  h+='<div class="block"><h5>Derece</h5>';
+  h+='<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2px">'+
+     '<span style="font-size:26px;font-weight:600;letter-spacing:-0.02em;color:var(--text)">'+GRADES[g]+'</span>'+
+     '<span style="font-size:14px;color:var(--text-2)">'+GRADEDESC[g]+'</span>'+
+     (marked(r)?'':'<span style="font-size:13px;color:var(--text-3)">· ön sonuç</span>')+'</div>';
+  h+='<div class="scaleWrap"><div class="pin" style="left:'+pos.toFixed(1)+'%"><span class="dot"></span><span class="stem"></span></div>'+
+     '<div class="scaleTrack"><i></i><i></i><i></i></div><div class="scaleLabels">'+
+     ['A1','A2','B1'].map(function(t,i){ return '<span'+(GRADESEG[g].indexOf(i)>=0?' class="on"':'')+'>'+t+'</span>'; }).join('')+
+     '</div></div>';
+  h+='<div style="margin-top:12px;font-size:14px;color:var(--text-2)">Otomatik <strong style="color:var(--text)">'+r.auto+' / 80</strong>'+
+     (marked(r) ? ' · Yazma <strong style="color:var(--text)">'+r.writing+' / 20</strong> · Toplam <strong style="color:var(--text)">'+(r.auto+r.writing)+' / 100</strong>' : ' · yazma puanlanmadı')+'</div>';
+  h+='</div>';
   h+='<div class="block"><h5>Bölüm bazında</h5>';
   ["p1","p2","p3","p4","p5"].forEach(function(k){
     var got=s[k]||0, mx=SECMAX[k];
@@ -537,24 +612,24 @@ function renderStats(){
   var n=ROWS.length;
   var week=ROWS.filter(function(r){ return (Date.now()-new Date(r.created_at))<7*864e5; }).length;
   var pend=ROWS.filter(function(r){ return !marked(r); }).length;
-  var d={A1:0,A2:0,B1:0,"B1+":0};
-  ROWS.forEach(function(r){ var l=levelOf(r); d[l]=(d[l]||0)+1; });
-  var b1 = d.B1 + d["B1+"];
+  var d={};
+  GRADES.forEach(function(g){ d[g]=0; });
+  ROWS.forEach(function(r){ d[levelOf(r)]++; });
+  var gA1=d[GRADES[0]], gA2=d[GRADES[2]], b1=d[GRADES[4]], gTr=d[GRADES[1]]+d[GRADES[3]];
   var tot = n||1;
-  var cols = {A1:"#8e8e93", A2:"var(--warn)", B1:"var(--accent)"};
+  var SHADE = ["#c7ccd3", "#a9b6c8", "#7f9ac0", "#4f79b4", "#1b4f9c"];
   $("stats").innerHTML =
     '<div class="stat"><div class="k">Toplam aday</div><div class="v">'+n+'</div><div class="s">son 7 günde '+week+'</div></div>'+
     '<div class="stat"><div class="k">Yazma bekleyen</div><div class="v">'+pend+'</div><div class="s">'+(pend?'puanlanmayı bekliyor':'hepsi tamam')+'</div></div>'+
-    '<div class="stat" style="grid-column:span 2"><div class="k">Seviye dağılımı</div>'+
-      '<div class="v" style="font-size:20px">'+d.A1+' · '+d.A2+' · '+b1+'</div>'+
+    '<div class="stat" style="grid-column:span 2"><div class="k">Derece dağılımı</div>'+
+      '<div class="v" style="font-size:20px">'+gA1+' · '+gA2+' · '+b1+
+        '<span style="font-size:14px;color:var(--text-2)"> · '+gTr+' geçiş kademesinde</span></div>'+
       '<div class="split">'+
-        '<i style="width:'+(100*d.A1/tot)+'%;background:'+cols.A1+'"></i>'+
-        '<i style="width:'+(100*d.A2/tot)+'%;background:'+cols.A2+'"></i>'+
-        '<i style="width:'+(100*b1/tot)+'%;background:'+cols.B1+'"></i>'+
+        GRADES.map(function(g,i){ return '<i style="width:'+(100*d[g]/tot)+'%;background:'+SHADE[i]+'"></i>'; }).join('')+
       '</div>'+
-      '<div class="legend"><span><b style="background:'+cols.A1+'"></b>A1 '+d.A1+'</span>'+
-      '<span><b style="background:'+cols.A2+'"></b>A2 '+d.A2+'</span>'+
-      '<span><b style="background:'+cols.B1+'"></b>B1 '+b1+'</span></div>'+
+      '<div class="legend">'+
+        GRADES.map(function(g,i){ return '<span><b style="background:'+SHADE[i]+'"></b>'+g+' '+d[g]+'</span>'; }).join('')+
+      '</div>'+
     '</div>';
 }
 
@@ -574,7 +649,7 @@ function render(){
     var m=marked(r), total=m?(r.auto+r.writing):null, lvl=levelOf(r);
     var contact=[r.phone,r.email].filter(Boolean).map(esc).join("<br>")||'<span style="color:var(--text-3)">—</span>';
     var grp=r.groupname?'<div style="color:var(--text-3);font-size:13px">'+esc(r.groupname)+'</div>':'';
-    var flag=isBorderline(r)?'<span class="flag">sınır</span>':'';
+    var flag=needsCheck(r)?'<span class="flag">teyit</span>':'';
     tr.innerHTML=
       '<td style="white-space:nowrap;color:var(--text-2);font-size:13px">'+fmtDate(r.created_at)+'</td>'+
       '<td><strong>'+esc(r.name)+'</strong>'+grp+'</td>'+
@@ -582,7 +657,7 @@ function render(){
       '<td class="n">'+r.auto+'</td>'+
       '<td class="n"></td>'+
       '<td class="n">'+(m?'<strong>'+total+'</strong>':'<span style="color:var(--text-3)">—</span>')+'</td>'+
-      '<td><span class="lvltag'+(m?' set':'')+'">'+lvl+'</span>'+flag+'</td>'+
+      '<td><span class="lvltag'+(m?' set':'')+'" style="white-space:nowrap">'+lvl+'</span>'+flag+'</td>'+
       '<td class="n"></td>';
 
     var w=document.createElement("input");
@@ -655,7 +730,7 @@ $("btnCsv").addEventListener("click",function(){
   var head=["Tarih","Ad Soyad","Telefon","E-posta","Grup",
             "Use of English /20","Reading /20","Cloze /10","Listening /16","Dictation /14",
             "A1 %","A2 %","B1 %","Boş","Süre dk","Kelime",
-            "Otomatik /80","Yazma /20","Toplam /100","Seviye","Sınır"];
+            "Otomatik /80","Yazma /20","Toplam /100","Derece","Teyit"];
   var out=[head.join(";")];
   ROWS.forEach(function(r){
     var s=r.sections||{}, lv=r.levels||{}, m=marked(r);
@@ -663,7 +738,7 @@ $("btnCsv").addEventListener("click",function(){
       s.p1,s.p2,s.p3,s.p4,s.p5,
       lv[1]?pctOf(lv[1]):"", lv[2]?pctOf(lv[2]):"", lv[3]?pctOf(lv[3]):"",
       r.blanks, r.minutes, r.words,
-      r.auto, m?r.writing:"", m?(r.auto+r.writing):"", levelOf(r), isBorderline(r)?"evet":""
+      r.auto, m?r.writing:"", m?(r.auto+r.writing):"", levelOf(r), needsCheck(r)?"evet":""
     ].map(function(v){ return String(v==null?"":v).replace(/;/g,","); }).join(";"));
   });
   var csv=out.join("\n");
