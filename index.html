@@ -1271,7 +1271,27 @@ function scaleOf(marked, auto, writing){
     : { x: auto,           cuts: [46, 63], w: 3, lo: 17, hi: 80 };
 }
 
-function grade5(x, lv, cuts, w){
+/* ---- altyapı freni ----
+   Üst kademenin adını vermeden önce bir alt seviyenin kapanmış olmasını şart koşar.
+   "B1 puanı var ama A2'si delik" olan aday B1 değil, A2 – B1'dir.
+   Gerçek B1 adayları A2 maddelerinin ortanca %93'ünü doğru yapıyor; eşikler
+   o dağılımın çok altında, yani dengeli adayı etkilemez. */
+function lvPct(lv, L){ var a = lv && lv[L]; return (a && a[1]) ? a[0]/a[1] : 1; }
+function gapBrake(g, lv){
+  if(!lv) return g;
+  var a1 = lvPct(lv,1), a2 = lvPct(lv,2);
+  /* her kural en fazla bir kademe geri çeker */
+  if(g >= 4 && a2 < 0.75) g = 3;   /* B1 demek için A2 oturmuş olmalı */
+  if(g >= 3 && a1 < 0.80) g = 2;   /* A1 delikse geçiş kademesinde durulmaz */
+  if(g >= 3 && a2 < 0.60) g = 2;   /* A2 çok delikse bir kademe daha geri */
+  if(g >= 2 && a1 < 0.70) g = 1;   /* A2 demek için A1 oturmuş olmalı */
+  if(g >= 1 && a1 < 0.55) g = 0;
+  return g;
+}
+/* çubuk da çekilen kademeyle tutarlı dursun */
+var PINTOP = [33.0, 42.0, 66.0, 75.0, 100.0];
+
+function grade5raw(x, lv, cuts, w){
   var rb = rawBand(x, cuts);
   /* İki kademeli hakimiyet güvenlik ağı.
      %80+ : seviye kanıtlanmıştır — ham puanı düşük kalsa bile saf kademe.
@@ -1289,6 +1309,9 @@ function grade5(x, lv, cuts, w){
   }
   return x < cuts[1] + w ? 3 : 4;
 }
+function grade5(x, lv, cuts, w){ return gapBrake(grade5raw(x, lv, cuts, w), lv); }
+function braked(x, lv, cuts, w){ var g0=grade5raw(x,lv,cuts,w); return gapBrake(g0,lv)<g0; }
+
 
 function barPos(x, lv, s){
   var c1 = s.cuts[0], c2 = s.cuts[1], p;
@@ -1301,7 +1324,8 @@ function barPos(x, lv, s){
      bir aday yüksek puanlıdan daha sağda görünürdü. */
   var mb=masteryBand(lv,0.70);
   if(mb>=2) p=Math.max(p, mb===2 ? 34.5 : 67.5);
-  return p;
+  /* iğne asla kademenin kendi bölgesinin ötesine geçmesin */
+  return Math.min(p, PINTOP[grade5(x, lv, s.cuts, s.w)]);
 }
 
 function paintScale(g, pos, elLevel, elDesc, elPin, elLabels){

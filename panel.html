@@ -261,6 +261,68 @@
   .split i{display:block;height:100%}
   .legend{display:flex;gap:12px;margin-top:8px;font-size:12.5px;color:var(--text-2);flex-wrap:wrap}
   .legend b{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0}
+  .repWrap{position:fixed;inset:0;z-index:200;overflow:auto;background:var(--surface-2);padding:0 0 60px}
+  .repBar{position:sticky;top:0;z-index:2;display:flex;gap:8px;align-items:center;
+    padding:12px 18px;background:var(--surface);border-bottom:1px solid var(--line)}
+  .repHint{font-size:13px;color:var(--text-2)}
+  .repSheet{width:186mm;max-width:calc(100% - 32px);margin:22px auto;background:#fff;color:#10243a;
+    padding:20mm 18mm;box-shadow:0 2px 20px rgba(16,36,58,.13);border-radius:2px}
+  .repSheet *{color:inherit}
+  .repHead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+    padding-bottom:14px;border-bottom:2px solid #10243a}
+  .repOrg{font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#1b4f9c}
+  .repTitle{margin:5px 0 0;font-size:23px;font-weight:700;letter-spacing:-.02em}
+  .repWho{text-align:right;font-size:13px;color:#5b6572;line-height:1.6}
+  .repWho b{display:block;font-size:17px;color:#10243a}
+  .repLvl{display:flex;align-items:baseline;gap:12px;margin:22px 0 4px}
+  .repLvl span:first-child{font-size:44px;font-weight:700;letter-spacing:-.03em;line-height:1}
+  .repLvl span:last-child{font-size:15px;color:#5b6572}
+  .repTrack{display:flex;gap:3px;height:11px;margin-top:20px}
+  .repTrack i{flex:1;background:#1b4f9c;border-radius:3px}
+  .repTrack i:nth-child(1){opacity:.22}.repTrack i:nth-child(2){opacity:.44}.repTrack i:nth-child(3){opacity:.70}
+  .repPinWrap{position:relative;padding-top:20px}
+  .repPin{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+  .repPin b{width:11px;height:11px;border-radius:50%;background:#10243a}
+  .repPin i{width:2px;height:9px;background:#10243a}
+  .repLbl{display:flex;gap:3px;margin-top:7px}
+  .repLbl span{flex:1;text-align:center;font-size:12px;font-weight:700;color:#8c96a2}
+  .repLbl span.on{color:#1b4f9c}
+  .repScore{margin-top:16px;font-size:14px;color:#5b6572}
+  .repH{margin:26px 0 10px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5b6572}
+  .repSk{display:flex;align-items:center;gap:12px;padding:7px 0;border-top:1px solid #e6e8ec;font-size:14px}
+  .repSk:first-of-type{border-top:0}
+  .repSk .n{width:132px;flex-shrink:0}
+  .repSk .t{flex:1;height:8px;background:#e6e8ec;border-radius:4px;overflow:hidden}
+  .repSk .t i{display:block;height:100%;background:#1b4f9c;border-radius:4px}
+  .repSk .v{width:46px;text-align:right;font-weight:700}
+  .repList{margin:0;padding-left:19px;font-size:14px;line-height:1.65}
+  .repList li{margin-bottom:5px}
+  .repNote{margin-top:12px;min-height:54px;padding:11px 13px;border:1px dashed #b9c2cc;border-radius:8px;
+    font-size:14px;line-height:1.6;color:#10243a}
+  .repNote:empty:before{content:"Buraya tıklayıp öğrenciye özel notunuzu yazabilirsiniz.";color:#a7b0ba}
+  .repFoot{margin-top:26px;padding-top:12px;border-top:1px solid #e6e8ec;font-size:12px;color:#8c96a2;line-height:1.6}
+  @media print{
+    body>*{display:none !important}
+    .repWrap{display:block !important;position:static;overflow:visible;background:#fff;padding:0}
+    .repBar{display:none !important}
+    .repSheet{width:auto;max-width:none;margin:0;padding:0;box-shadow:none;border-radius:0}
+    .repNote{border-style:solid;border-color:#e6e8ec}
+    .repNote:empty:before{content:""}
+    @page{size:A4;margin:16mm}
+  }
+  .qrow{padding:9px 0;border-top:1px solid var(--line)}
+  .qrow:first-of-type{border-top:0}
+  .qtxt{font-size:14px;line-height:1.5;color:var(--text)}
+  .qans{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:5px}
+  .qbad,.qgood{font-size:13px;border-radius:7px;padding:3px 9px;white-space:nowrap}
+  .qbad{background:#fdecec;color:#a11d1d;text-decoration:line-through}
+  .qbad em{text-decoration:none}
+  .qgood{background:#e8f3ea;color:#1c6b33}
+  .qtag{font-size:12px;color:var(--text-3);margin-left:auto}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .qbad{background:#3a1d1d;color:#f0a8a8}
+    :root:not([data-theme="light"]) .qgood{background:#17301f;color:#8fd0a3} }
+  :root[data-theme="dark"] .qbad{background:#3a1d1d;color:#f0a8a8}
+  :root[data-theme="dark"] .qgood{background:#17301f;color:#8fd0a3}
   .scaleWrap{position:relative;padding-top:22px;margin:4px 0 2px}
   .scaleTrack{display:flex;gap:3px;height:10px}
   .scaleTrack i{flex:1;background:var(--accent);border-radius:3px}
@@ -378,6 +440,78 @@ function unlock(b){
 }
 var KEY = unlock(KEYBLOB);
 
+var ITEMBLOB = "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";
+function unlockTxt(b){
+  var salt="stq-2026-plc", bin=atob(b), out="";
+  for(var i=0;i<bin.length;i++) out+=String.fromCharCode(bin.charCodeAt(i)^salt.charCodeAt(i%salt.length));
+  return JSON.parse(decodeURIComponent(out));
+}
+var ITEMS = unlockTxt(ITEMBLOB);
+
+/* konu kümeleri — sıra raporda da bu sırayla görünür */
+var TOPIC = [
+ ["TEM","Temel yapılar",      "am/is/are, have got, zamirler, iyelik, there is/are, geniş zaman"],
+ ["ZAM","Zaman kullanımı",    "geçmiş zaman, present perfect, going to"],
+ ["NIT","Niteleme",           "karşılaştırma sıfatları, too/very, kelime seçimi"],
+ ["MOD","Modal ve koşul",     "must, should, might ve birinci tip koşul"],
+ ["KAR","Karmaşık yapılar",   "bağlaçlar, edilgen çatı, dolaylı anlatım, fiil kalıpları"],
+ ["IMA","Konuşma ve ima",     "diyalogda söylenmeyen anlamı çıkarma"],
+ ["OKU","Okuma",              "tabela, e-posta ve metinden bilgi bulma"],
+ ["DIN","Dinleme",            "kayıttan sayı, saat ve detay yakalama"],
+ ["DIK","Dikte",              "duyduğunu doğru yazma"]
+];
+var TOPICADVICE = {
+ TEM:"Temel cümle kalıpları: am/is/are, have got, iyelik sıfatları ve there is/there are.",
+ ZAM:"Zamanlar: geçmiş zaman ile present perfect arasındaki fark ve gelecek anlatımı.",
+ NIT:"Sıfat ve zarflar: karşılaştırma kalıpları, too/very ayrımı ve doğru kelime seçimi.",
+ MOD:"Yardımcı fiiller ve koşul cümleleri: must, should, might ve 'if' yapıları.",
+ KAR:"İleri yapılar: edilgen çatı, dolaylı anlatım, bağlaçlar ve fiil kalıpları.",
+ IMA:"Konuşmada ima edilen anlamı çıkarma: kibar ret, dolaylı öneri, üstü kapalı ifadeler.",
+ OKU:"Okuduğunu anlama: metin içinde belirli bir bilgiyi hızlı bulma.",
+ DIN:"Dinlediğini anlama: sayı, saat, fiyat ve konuşmadaki detayları yakalama.",
+ DIK:"Duyduğunu yazma: dinleme ile yazımı birlikte çalışmak."
+};
+/* öğrenciye gösterilen beş geniş beceri — hepsinde yeterli soru var */
+var SKILL = [
+ ["Dilbilgisi",      ["TEM","ZAM","NIT","MOD","KAR"]],
+ ["Okuma",           ["OKU"]],
+ ["Dinleme",         ["DIN"]],
+ ["Konuşma anlama",  ["IMA"]],
+ ["Dikte",           ["DIK"]]
+];
+
+/* bir adayın konu bazında doğru/toplamı */
+function topicStats(r){
+  var out={}, ans=r.answers||null;
+  TOPIC.forEach(function(t){ out[t[0]]={got:0,tot:0,miss:[]}; });
+  ["p1","p2","p3","p4","p5"].forEach(function(sec){
+    (ITEMS[sec]||[]).forEach(function(it,ix){
+      var o=out[it.t]; if(!o) return;
+      o.tot+=1;
+      var g=ans?((ans[sec]||{})[ix+1]):undefined;
+      var blank=(g===undefined||g===null||String(g).trim()==="");
+      var right=false, correct=KEY[sec][ix];
+      if(!blank){
+        if(sec==="p5"){ var alts=correct.split("|"), n=norm(g);
+          for(var z=0;z<alts.length;z++) if(n===alts[z]) right=true; }
+        else right=(g===correct);
+      }
+      if(right) o.got+=1;
+      else o.miss.push({sec:sec, no:ix+1, q:it.q, o:it.o, gave:blank?null:g, key:correct, blank:blank});
+    });
+  });
+  return out;
+}
+function skillPct(ts, codes){
+  var g=0,t=0; codes.forEach(function(c){ g+=ts[c].got; t+=ts[c].tot; });
+  return t? Math.round(100*g/t) : 0;
+}
+function optText(it, letter){
+  if(!it || !it.o) return letter;
+  var ix="ABCD".indexOf(letter);
+  return (ix>=0 && it.o[ix]) ? it.o[ix] : letter;
+}
+
 /* ---------- helpers ---------- */
 function $(id){ return document.getElementById(id); }
 function el(t,c,h){ var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; }
@@ -412,7 +546,27 @@ function scaleOf(r){
     ? { x:r.auto+r.writing, cuts:[55,75], w:4, lo:17, hi:100 }
     : { x:r.auto,           cuts:[46,63], w:3, lo:17, hi:80  };
 }
-function grade5(x, lv, cuts, w){
+/* ---- altyapı freni ----
+   Üst kademenin adını vermeden önce bir alt seviyenin kapanmış olmasını şart koşar.
+   "B1 puanı var ama A2'si delik" olan aday B1 değil, A2 – B1'dir.
+   Gerçek B1 adayları A2 maddelerinin ortanca %93'ünü doğru yapıyor; eşikler
+   o dağılımın çok altında, yani dengeli adayı etkilemez. */
+function lvPct(lv, L){ var a = lv && lv[L]; return (a && a[1]) ? a[0]/a[1] : 1; }
+function gapBrake(g, lv){
+  if(!lv) return g;
+  var a1 = lvPct(lv,1), a2 = lvPct(lv,2);
+  /* her kural en fazla bir kademe geri çeker */
+  if(g >= 4 && a2 < 0.75) g = 3;   /* B1 demek için A2 oturmuş olmalı */
+  if(g >= 3 && a1 < 0.80) g = 2;   /* A1 delikse geçiş kademesinde durulmaz */
+  if(g >= 3 && a2 < 0.60) g = 2;   /* A2 çok delikse bir kademe daha geri */
+  if(g >= 2 && a1 < 0.70) g = 1;   /* A2 demek için A1 oturmuş olmalı */
+  if(g >= 1 && a1 < 0.55) g = 0;
+  return g;
+}
+/* çubuk da çekilen kademeyle tutarlı dursun */
+var PINTOP = [33.0, 42.0, 66.0, 75.0, 100.0];
+
+function grade5raw(x, lv, cuts, w){
   var rb = rawBand(x, cuts);
   var proven = masteryBand(lv, 0.80);
   if(proven > rb) return proven === 2 ? 2 : 4;
@@ -425,6 +579,9 @@ function grade5(x, lv, cuts, w){
   }
   return x < cuts[1]+w ? 3 : 4;
 }
+function grade5(x, lv, cuts, w){ return gapBrake(grade5raw(x, lv, cuts, w), lv); }
+function braked(x, lv, cuts, w){ var g0=grade5raw(x,lv,cuts,w); return gapBrake(g0,lv)<g0; }
+
 function gradeOf(r){ var s=scaleOf(r); return grade5(s.x, r.levels, s.cuts, s.w); }
 function levelOf(r){ return GRADES[gradeOf(r)]; }
 function barPos(r){
@@ -435,7 +592,7 @@ function barPos(r){
   p=Math.max(1.5,Math.min(98.5,p));
   var mb=masteryBand(r.levels,0.70);
   if(mb>=2) p=Math.max(p, mb===2 ? 34.5 : 67.5);
-  return p;
+  return Math.min(p, PINTOP[grade5(x, r.levels, s.cuts, s.w)]);
 }
 function placedByMastery(r){
   var s=scaleOf(r);
@@ -549,6 +706,13 @@ function diagnose(r){
     out.push("DİKKAT: kayıtlı puan ("+r.auto+") ham cevaplardan hesaplanan puanla ("+rc+") uyuşmuyor. Sonuç elle değiştirilmiş olabilir.");
 
   if(!marked(r)) out.push("Yazma henüz puanlanmadı; seviye geçicidir.");
+  var sB=scaleOf(r), gRaw=grade5raw(sB.x, r.levels, sB.cuts, sB.w), gNow=gradeOf(r);
+  if(gNow < gRaw){
+    var a1p=Math.round(100*lvPct(r.levels,1)), a2p=Math.round(100*lvPct(r.levels,2));
+    out.push("ALTYAPI FRENİ — puanı "+GRADES[gRaw]+" seviyesine ulaşıyor, ancak alt seviyesi kapanmamış "+
+      "(A1 maddeleri %"+a1p+", A2 maddeleri %"+a2p+"). Bu yüzden "+GRADES[gNow]+" olarak yerleştirildi. "+
+      "Üst kura alınırsa eksikleri üzerine bina edilir ve zorlanır.");
+  }
   var g0=gradeOf(r);
   if(g0===1||g0===3) out.push("Geçiş kademesinde ("+GRADES[g0]+") — iki kur da mümkün. 3 dakikalık sözlü teyit kararı netleştirir.");
   if(needsCheck(r)) out.push("Sözlü teyit önerilir: aşağıdaki işaretlerden en az biri var — çok boş bırakma, şüpheli hızlı bitirme, çok dengesiz beceri profili ya da puan tutarsızlığı.");
@@ -591,6 +755,36 @@ function detailHtml(r){
               '<span class="vl">'+c[0]+' / '+c[1]+'</span></div>';
   h+='</div>';
 
+  if(r.answers){
+    var ts=topicStats(r);
+    h+='<div class="block"><h5>Konu kümeleri</h5>';
+    TOPIC.forEach(function(t){
+      var o=ts[t[0]]; if(!o.tot) return;
+      var thin=o.tot<=3 ? ' <span style="color:var(--text-3)">· az soru</span>' : '';
+      h+='<div class="drow"><span class="nm" title="'+esc(t[2])+'">'+t[1]+'</span>'+bar(o.got,o.tot)+
+         '<span class="vl">'+o.got+' / '+o.tot+' soru  %'+Math.round(100*o.got/o.tot)+thin+'</span></div>';
+    });
+    h+='<p class="fine" style="margin:10px 0 0">Yanında <em>az soru</em> yazan kümelerde üç ya da daha az madde var; '+
+       'oradaki sonuç kesin hüküm değil, yalnızca ipucudur.</p></div>';
+
+    var miss=[];
+    TOPIC.forEach(function(t){ ts[t[0]].miss.forEach(function(m){ m.t=t[1]; miss.push(m); }); });
+    miss.sort(function(a,b){ return (a.sec+String(a.no).padStart(2,"0")) < (b.sec+String(b.no).padStart(2,"0")) ? -1 : 1; });
+    h+='<div class="block"><h5>Kaçırdığı sorular ('+miss.length+')</h5>';
+    if(!miss.length) h+='<p class="fine">Hepsi doğru.</p>';
+    miss.forEach(function(m){
+      var it=ITEMS[m.sec][m.no-1];
+      var verdi = m.blank ? '<em style="color:var(--text-3)">boş bıraktı</em>'
+                          : esc(m.sec==="p5" ? m.gave : optText(it, m.gave));
+      var dogru = esc(m.sec==="p5" ? m.key.split("|")[0] : optText(it, m.key));
+      h+='<div class="qrow"><div class="qtxt">'+esc(m.q)+'</div>'+
+         '<div class="qans"><span class="qbad">'+verdi+'</span>'+
+         '<span class="qgood">'+dogru+'</span>'+
+         '<span class="qtag">'+esc(m.t)+'</span></div></div>';
+    });
+    h+='</div>';
+  }
+
   h+='<div class="block"><h5>Oturum</h5><div class="dfacts">';
   h+='<span>Boş bırakılan: <strong>'+(r.blanks!=null?r.blanks:"—")+'</strong> soru</span>';
   h+='<span>Süre: <strong>'+(r.minutes!=null?r.minutes+" dk":"—")+'</strong></span>';
@@ -607,6 +801,97 @@ function detailHtml(r){
   h+='<p class="fine" style="margin:10px 0 0">Rubrik — her biri 0–5: <strong>içerik</strong> (üç soruya yanıt), <strong>düzen</strong> (bağlantı, akış), <strong>dilbilgisi</strong> (yapı çeşitliliği ve doğruluk), <strong>kelime &amp; yazım</strong>. Toplamı yukarıdaki kutuya yazın.</p></div>';
   return h+'</div>';
 }
+
+/* ---- öğrenci raporu — Oxford OOPT / Linguaskill yapısı ----
+   Üç bölüm puanı, seviye tanımı ve "neler yapabilirsin" ifadeleri.
+   Konu kırılımı ve soru dökümü bilerek yok; onlar öğretmen panelinde kalır. */
+var CANDO = {
+ 0:["Kendini tanıtabilir, nereli olduğunu ve ne yaptığını söyleyebilirsin.",
+    "Sayıları, saatleri ve günlük eşyaların adlarını anlayabilirsin.",
+    "Çok kısa ve basit cümlelerle yazabilirsin."],
+ 1:["Kendini ve yakın çevreni basit cümlelerle tanıtabilirsin.",
+    "Yavaş ve net konuşulduğunda tanıdık kelimeleri yakalayabilirsin.",
+    "Kısa mesaj ve tabelaların ne dediğini çıkarabilirsin."],
+ 2:["Ailen, işin ve çevren hakkında basit cümlelerle konuşabilirsin.",
+    "Kısa ilanları, mesajları ve e-postaları anlayabilirsin.",
+    "Alışveriş, yol sorma gibi günlük durumlarda anlaşabilirsin."],
+ 3:["Tanıdık konulardaki konuşmaların ana hattını takip edebilirsin.",
+    "Günlük metinlerde aradığın bilgiyi bulabilirsin.",
+    "Geçmiş ve gelecek planlarını basit cümlelerle anlatabilirsin."],
+ 4:["Tanıdık konularda kesintisiz konuşmayı takip edebilirsin.",
+    "Bir metnin ana fikrini ve detaylarını yakalayabilirsin.",
+    "Deneyimlerini ve planlarını bağlantılı cümlelerle anlatabilirsin."]
+};
+/* raporda gösterilen üç bölüm — sınavın beş parçası bunlara toplanır */
+var REPSEC = [
+ ["Dil kullanımı", ["TEM","ZAM","NIT","MOD","KAR"]],
+ ["Okuma",         ["OKU","IMA"]],
+ ["Dinleme",       ["DIN","DIK"]]
+];
+
+function reportHtml(r){
+  var g=gradeOf(r), pos=barPos(r), m=marked(r);
+  var org=(CFG.SCHOOL_NAME||"Sarıyer Eğitim Merkezi");
+  var d=new Date(r.created_at);
+  var tarih=isNaN(d)?"":("0"+d.getDate()).slice(-2)+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+d.getFullYear();
+
+  var h='<div class="repHead"><div><div class="repOrg">'+esc(org)+'</div>'+
+    '<h1 class="repTitle">İngilizce Seviye Tespit Sonucu</h1></div>'+
+    '<div class="repWho"><b>'+esc(r.name)+'</b>'+tarih+
+    (r.groupname?'<br>'+esc(r.groupname):'')+'</div></div>';
+
+  h+='<div class="repLvl"><span>'+GRADES[g]+'</span><span>'+GRADEDESC[g]+'</span></div>';
+  h+='<div class="repPinWrap"><div class="repPin" style="left:'+pos.toFixed(1)+'%"><b></b><i></i></div>'+
+     '<div class="repTrack"><i></i><i></i><i></i></div><div class="repLbl">'+
+     ["A1","A2","B1"].map(function(t,i){ return '<span'+(GRADESEG[g].indexOf(i)>=0?' class="on"':'')+'>'+t+'</span>'; }).join('')+
+     '</div></div>';
+
+  h+='<div class="repScore">Test bölümü <strong>'+r.auto+' / 80</strong>'+
+     (m? ' · Yazma <strong>'+r.writing+' / 20</strong> · Toplam <strong>'+(r.auto+r.writing)+' / 100</strong>'
+       : ' · yazma bölümü ayrıca değerlendirilmiştir')+
+     (r.minutes!=null? ' · Süre <strong>'+r.minutes+' dk</strong>':'')+'</div>';
+
+  if(r.answers){
+    var ts=topicStats(r);
+    h+='<div class="repH">Bölüm sonuçların</div>';
+    REPSEC.forEach(function(s){
+      var pc=skillPct(ts,s[1]);
+      h+='<div class="repSk"><span class="n">'+s[0]+'</span>'+
+         '<span class="t"><i style="width:'+pc+'%"></i></span><span class="v">%'+pc+'</span></div>';
+    });
+  }
+
+  h+='<div class="repH">Bu seviyede neler yapabilirsin</div><ul class="repList"><li>'+
+     CANDO[g].map(esc).join('</li><li>')+'</li></ul>';
+
+  h+='<div class="repH">Öğretmen notu</div><div class="repNote" contenteditable="true"></div>';
+
+  h+='<div class="repFoot">Bu bir yerleştirme sınavıdır; geçme veya kalma yoktur. '+
+     'Amacı seni doğru kurda başlatmaktır.'+
+     (CFG.CONTACT_LINE? '<br>'+esc(CFG.CONTACT_LINE) : '')+'</div>';
+  return h;
+}
+
+function openReport(r){
+  $("repSheet").innerHTML = reportHtml(r);
+  $("rep").hidden = false;
+  document.body.style.overflow = "hidden";
+  /* kaydedilen PDF bu adla iner */
+  document.title = r.name + " - Seviye Sonucu";
+}
+function closeReport(){
+  $("rep").hidden = true;
+  document.body.style.overflow = "";
+  document.title = PAGETITLE;
+}
+document.addEventListener("click",function(ev){
+  var t=ev.target;
+  if(t&&t.id==="repClose"){ closeReport(); }
+  if(t&&t.id==="repPrint"){ window.print(); }
+});
+document.addEventListener("keydown",function(ev){
+  if(ev.key==="Escape" && !$("rep").hidden){ closeReport(); }
+});
 
 function renderStats(){
   var n=ROWS.length;
@@ -695,7 +980,10 @@ function render(){
         .then(function(){ ROWS=ROWS.filter(function(x){return x.id!==r.id;}); render(); toast("Silindi."); })
         .catch(function(){ toast("Silinemedi."); });
     });
-    act.appendChild(bd); act.appendChild(bx);
+    var br=document.createElement("button");
+    br.className="tiny"; br.type="button"; br.textContent="Rapor";
+    br.addEventListener("click",function(){ openReport(r); });
+    act.appendChild(bd); act.appendChild(br); act.appendChild(bx);
     tr.children[7].appendChild(act);
     tb.appendChild(tr);
   });
@@ -765,5 +1053,13 @@ $("btnCsv").addEventListener("click",function(){
 })();
 
 </script>
+<div class="repWrap" id="rep" hidden>
+  <div class="repBar">
+    <button class="tiny" type="button" id="repPrint">Yazdır / PDF</button>
+    <button class="tiny" type="button" id="repClose">Kapat</button>
+    <span class="repHint">Yazdır'a basıp hedef olarak <strong>PDF olarak kaydet</strong>'i seçin.</span>
+  </div>
+  <div class="repSheet" id="repSheet"></div>
+</div>
 </body>
 </html>
