@@ -195,6 +195,21 @@
   .gn{font-size:11px;color:var(--accent);font-weight:700;vertical-align:super;margin:0 2px 0 1px}
   .dictrow{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
 
+  .warnline{border-left:3px solid var(--warn);background:rgba(138,97,0,.10);
+    border-radius:0 var(--r-md) var(--r-md) 0;padding:12px 15px;font-size:14.5px;line-height:1.55;margin-bottom:14px}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .warnline{background:rgba(227,179,65,.12)} }
+  :root[data-theme="dark"] .warnline{background:rgba(227,179,65,.12)}
+  .reqtag{display:inline-block;margin-left:8px;font-size:11.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--alert);background:var(--alert-soft);border-radius:999px;padding:3px 9px;vertical-align:middle}
+  .askrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;
+    background:var(--surface-2);border-radius:var(--r-md);padding:13px 15px}
+  .askrow b{font-size:15px}
+  .askrow button{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:999px;
+    padding:9px 16px;border:1px solid var(--line-2);background:var(--surface);color:var(--text);cursor:pointer}
+  .askrow button.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+  .askrow button.no{background:var(--surface);color:var(--alert);border-color:var(--alert)}
+  .fixlist{margin:12px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7}
+  .fixlist li{margin-bottom:5px}
   .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r-md) var(--r-md) 0;padding:13px 16px;font-size:15px}
   .note.warn{border-left-color:var(--alert);background:var(--alert-soft)}
   .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -322,12 +337,43 @@
     </div>
   </div>
 
-  <div class="card">
-    <h3>Ses kontrolü</h3>
-    <p class="fine" style="margin-bottom:14px">4. ve 5. bölümde İngilizce kayıtlar dinlersiniz. Kulaklık takın ve aşağıdaki düğmeyle sesin geldiğini doğrulayın.</p>
+  <div class="card" id="cardAudio">
+    <h3>Ses kontrolü<span class="reqtag" id="audioTag">zorunlu</span></h3>
+    <p class="fine" style="margin-bottom:14px">Sınavın <strong>22 sorusu</strong> dinlemeye dayalıdır. Başlamadan önce sesin geldiğini doğrulamanız gerekir. Kulaklık önerilir.</p>
+
+    <div class="warnline" id="iosWarn" hidden>
+      <strong>iPhone / iPad kullanıyorsunuz.</strong> Cihazın yan tarafındaki <strong>sessiz anahtarını kapatın</strong>
+      — küçük turuncu çizgi görünmemeli. Sessiz moddayken bu sınavın sesi <strong>hiç duyulmaz</strong>,
+      üstelik ekranda hata da çıkmaz. Ses seviyesini de açın.
+    </div>
+
     <div class="audio" style="margin-bottom:0">
       <div class="label"><b>Ses testi</b><span id="testState">Kısa bir İngilizce cümle</span></div>
       <button id="btnTest" type="button"><span class="wave"><i></i><i></i><i></i><i></i></span>Dinle</button>
+    </div>
+
+    <div class="askrow" id="heardRow" hidden>
+      <b style="flex:1;min-width:180px">İngilizce cümleyi duydunuz mu?</b>
+      <button type="button" class="yes" id="btnHeardYes">Evet, duydum</button>
+      <button type="button" class="no"  id="btnHeardNo">Hayır</button>
+    </div>
+
+    <div id="noSoundHelp" hidden>
+      <div class="warnline" style="margin-top:14px;margin-bottom:0">
+        <strong>Sırayla şunları deneyin:</strong>
+        <ul class="fixlist">
+          <li><strong>iPhone / iPad:</strong> yandaki sessiz anahtarını kapatın, ses tuşuyla sesi açın.</li>
+          <li>Kulaklık takılıysa çıkarıp tekrar deneyin; Bluetooth kulaklık başka cihaza bağlı olabilir.</li>
+          <li>Telefonun zil sesini açın, medya sesini sonuna kadar yükseltin.</li>
+          <li>Sayfayı kapatıp <strong>Chrome</strong> ile açmayı deneyin.</li>
+          <li>Android tablette hiç ses çıkmıyorsa cihazda İngilizce konuşma paketi kurulu olmayabilir.</li>
+        </ul>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button type="button" id="btnRetryAudio" style="font-family:inherit;font-size:14.5px;font-weight:600;border-radius:999px;padding:9px 16px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer">Tekrar dene</button>
+          <button type="button" id="btnSkipAudio" style="font-family:inherit;font-size:14px;border-radius:999px;padding:9px 16px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);cursor:pointer">Ses olmadan devam et</button>
+        </div>
+        <p class="fine" style="margin:10px 0 0">Ses olmadan devam ederseniz dinleme bölümlerini yapamazsınız ve seviyeniz eksik ölçülür. Öğretmeniniz bu durumu görecek ve sizinle iletişime geçecektir.</p>
+      </div>
     </div>
   </div>
 
@@ -346,7 +392,7 @@
 
   <div class="footrow">
     <span class="left" id="resumeNote"></span>
-    <button class="primary big" id="btnStart" type="button">Sınavı başlat</button>
+    <button class="primary big" id="btnStart" type="button" disabled>Sınavı başlat</button>
   </div>
 
 </section>
@@ -682,7 +728,7 @@ var KEY = unlock(KEYBLOB);
 var SKEY = "stq2026.state", OUTBOX = "stq2026.outbox";
 var CFG = window.STQ_CONFIG || {};
 function blank(){
-  return {name:"",phone:"",mail:"",group:"",started:0,part:-1,ends:0,
+  return {name:"",phone:"",mail:"",group:"",started:0,part:-1,ends:0, audio:null,
           a:{p1:{},p2:{},p3:{},p4:{},p5:{}}, writing:"", plays:{}, done:false};
 }
 var ST = blank();
@@ -789,7 +835,7 @@ function setPlayBtn(btn,playing){
   btn.classList.toggle("playing",playing);
 }
 
-var TTS = { keep:null };
+var TTS = { keep:null, hold:[] };
 function stopAudio(){
   Object.keys(CLIP_EL).forEach(function(k){
     var a=CLIP_EL[k];
@@ -805,6 +851,7 @@ function stopAudio(){
 
 /* --- browser voices, used only as a fallback --- */
 var SPK={a:null,b:null,primed:false};
+function normLang(s){ return String(s||"en-GB").replace(/_/g,"-"); }
 function refreshVoices(){
   var all=[];
   try{ all=(window.speechSynthesis&&speechSynthesis.getVoices)?(speechSynthesis.getVoices()||[]):[]; }catch(e){}
@@ -922,8 +969,14 @@ function playTTS(key, btn){
     if(i>=lines.length){ end(started); return; }
     var L=lines[i++], txt=(typeof L==="string")?L:L.t;
     var u=new SpeechSynthesisUtterance(txt);
-    if(SPK.a) u.voice=SPK.a;
-    u.lang=(SPK.a&&SPK.a.lang)||"en-GB";
+    /* Tarayıcı, konuşma bitmeden utterance'ı çöpe atabiliyor; o zaman onend/onerror
+       hiç çalışmıyor. Referansı tutmak bu bilinen hatayı engelliyor. */
+    TTS.hold.push(u); if(TTS.hold.length>40) TTS.hold.shift();
+    /* Bazı cihazlarda ses nesnesi atanırken hata fırlıyor; o zaman sese hiç
+       dokunmadan devam ediyoruz, tarayıcı kendi varsayılanını kullanır. */
+    try{ if(SPK.a) u.voice=SPK.a; }catch(e){}
+    /* Android "en_US" gibi alt çizgili kod döndürüyor; normalize etmezsek ses çıkmıyor. */
+    u.lang=normLang((SPK.a&&SPK.a.lang)||"en-GB");
     u.rate=rate;
     u.onstart=function(){ bump(); if(!started){ started=true; if(key!=="test") consume(key); } };
     u.onend=function(){ bump(); setTimeout(next,320); };
@@ -1354,7 +1407,8 @@ function finish(){
     at:new Date().toISOString(),
     mins: ST.started ? Math.round((Date.now()-ST.started)/60000) : null,
     s:r.s, lv:r.lv, blanks:r.blanks, auto:auto, writing:null,
-    answers:{p1:ST.a.p1,p2:ST.a.p2,p3:ST.a.p3,p4:ST.a.p4,p5:ST.a.p5},
+    answers:{p1:ST.a.p1,p2:ST.a.p2,p3:ST.a.p3,p4:ST.a.p4,p5:ST.a.p5,
+             meta:{audio: ST.audio || "ok"}},
     words: wtxt ? wtxt.split(/\s+/).length : 0, text:wtxt
   };
   var sc = scaleOf(false, auto, null);
@@ -1388,15 +1442,66 @@ function finish(){
 
 /* ===================== BOOT ===================== */
 
+/* ---------- SES KAPISI ----------
+   Tarayıcı "çaldım" dese bile adayın gerçekten duyduğunu bilemeyiz: iOS'ta sessiz
+   anahtarı açıkken konuşma motoru hiç ses çıkarmaz ve HİÇBİR hata vermez. Bu yüzden
+   kararı makineye değil adaya veriyoruz. Sınav, aday duyduğunu onaylamadan başlamaz. */
+var AUDIO_OK = null;   /* null = denenmedi · "ok" = duydu · "skip" = sessiz devam */
+var IS_IOS = (function(){
+  try{
+    var ua=navigator.userAgent||"";
+    return /iPad|iPhone|iPod/.test(ua) ||
+           (/Macintosh/.test(ua) && navigator.maxTouchPoints>1);   /* iPadOS masaüstü modu */
+  }catch(e){ return false; }
+})();
+
+function setStartEnabled(){
+  var b=$("btnStart"); if(!b) return;
+  b.disabled = (AUDIO_OK===null);
+}
+function audioGate(state){
+  AUDIO_OK = state;
+  var tag=$("audioTag");
+  if(state==="ok"){
+    $("testState").innerHTML="<span style='color:var(--ok)'>Ses doğrulandı.</span>";
+    if(tag){ tag.textContent="tamam"; tag.style.color="var(--ok)"; tag.style.background="rgba(28,122,74,.12)"; }
+    $("heardRow").hidden=true; $("noSoundHelp").hidden=true;
+  } else if(state==="skip"){
+    $("testState").innerHTML="<span style='color:var(--warn)'>Ses olmadan devam ediliyor.</span>";
+    if(tag){ tag.textContent="ses yok"; tag.style.color="var(--warn)"; tag.style.background="rgba(138,97,0,.14)"; }
+    $("heardRow").hidden=true; $("noSoundHelp").hidden=true;
+  }
+  setStartEnabled();
+}
+
 $("btnTest").addEventListener("click",function(){
   if(AU.busy) return;
   primeAudio();
   $("testState").textContent="Çalıyor…";
+  $("heardRow").hidden=true; $("noSoundHelp").hidden=true;
   playKey("test", this, function(ok){
-    $("testState").innerHTML = ok
-      ? "<span style='color:var(--ok)'>Ses çalışıyor. Başlayabilirsiniz.</span>"
-      : "<span style='color:var(--alert)'>Ses gelmedi — cihaz sesini açıp tekrar deneyin.</span>";
+    if(!ok){
+      /* motor açıkça başarısız oldu — doğrudan yardım ekranı */
+      $("testState").innerHTML="<span style='color:var(--alert)'>Ses başlatılamadı.</span>";
+      $("noSoundHelp").hidden=false;
+      return;
+    }
+    /* motor "çaldım" dedi, ama duyulduğunu yalnızca aday söyleyebilir */
+    $("testState").textContent="Cümle çalındı.";
+    $("heardRow").hidden=false;
   });
+});
+$("btnHeardYes").addEventListener("click",function(){ audioGate("ok"); });
+$("btnHeardNo").addEventListener("click",function(){
+  $("heardRow").hidden=true; $("noSoundHelp").hidden=false;
+  $("testState").innerHTML="<span style='color:var(--alert)'>Ses duyulmadı.</span>";
+});
+$("btnRetryAudio").addEventListener("click",function(){
+  $("noSoundHelp").hidden=true; $("btnTest").click();
+});
+$("btnSkipAudio").addEventListener("click",function(){
+  if(!confirm("Ses olmadan devam ederseniz dinleme ve dikte bölümlerini yapamazsınız ve seviyeniz eksik ölçülür.\n\nYine de devam etmek istiyor musunuz?")) return;
+  audioGate("skip");
 });
 $("writing").addEventListener("input",function(){ ST.writing=this.value; countWords(); });
 setInterval(function(){ if(ST.part===5) save(); },5000);
@@ -1406,8 +1511,10 @@ $("btnStart").addEventListener("click",function(){
   if(n.length<3){ $("fName").focus(); toast("Lütfen ad ve soyadınızı yazın."); return; }
   var tel=$("fPhone").value.trim();
   if(tel.replace(/\D/g,"").length<10){ $("fPhone").focus(); toast("Lütfen telefon numaranızı yazın — sonucunuz için gerekli."); return; }
+  if(AUDIO_OK===null){ toast("Başlamadan önce ses kontrolünü yapın."); $("btnTest").focus(); return; }
   primeAudio();
   ST=blank();
+  ST.audio=AUDIO_OK;
   ST.name=n; ST.phone=$("fPhone").value.trim(); ST.mail=$("fMail").value.trim(); ST.group=$("fGroup").value.trim();
   ST.started=Date.now();
   startPart(0);
@@ -1426,6 +1533,8 @@ window.addEventListener("beforeunload",function(){ if(ST.part>=0&&!ST.done) save
   }
   if(CFG.CONTACT_LINE) $("rContact").textContent = CFG.CONTACT_LINE;
   initClips();
+  if(IS_IOS){ var w=$("iosWarn"); if(w) w.hidden=false; }
+  setStartEnabled();
   flushOutbox();
   window.addEventListener("online", flushOutbox);
   if(!configured()){

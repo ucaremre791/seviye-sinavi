@@ -600,7 +600,9 @@ function placedByMastery(r){
 }
 /* Sınır etiketi artık "sözlü teyit yap" demek: çok boş bırakmış,
    şüpheli hızlı bitirmiş ya da beceri profili çok dengesiz adaylar. */
+function audioSkipped(r){ return !!(r.answers&&r.answers.meta&&r.answers.meta.audio==="skip"); }
 function needsCheck(r){
+  if(audioSkipped(r)) return true;
   if(r.blanks >= 26) return true;                       /* sınavın yarısı boş */
   if(r.blanks >= 18 && r.auto >= 46) return true;       /* puan seviyeyi eksik gösteriyor olabilir */
   if(r.minutes != null && r.minutes < 12 && r.auto >= 63) return true;
@@ -707,6 +709,9 @@ function diagnose(r){
 
   if(!marked(r)) out.push("Yazma henüz puanlanmadı; seviye geçicidir.");
   var sB=scaleOf(r), gRaw=grade5raw(sB.x, r.levels, sB.cuts, sB.w), gNow=gradeOf(r);
+  if(audioSkipped(r)) out.push("SES YOK — aday sesi duymadığını bildirip sınava öyle girdi. "+
+    "Dinleme (16 puan) ve dikte (14 puan) bölümleri geçersiz sayılmalı; "+
+    "bu adayın seviyesi en az bir kademe yukarıda olabilir. Dinlemesi mutlaka ayrıca ölçülmeli.");
   if(gNow < gRaw){
     var a1p=Math.round(100*lvPct(r.levels,1)), a2p=Math.round(100*lvPct(r.levels,2));
     out.push("ALTYAPI FRENİ — puanı "+GRADES[gRaw]+" seviyesine ulaşıyor, ancak alt seviyesi kapanmamış "+
@@ -786,6 +791,9 @@ function detailHtml(r){
   }
 
   h+='<div class="block"><h5>Oturum</h5><div class="dfacts">';
+  var am=(r.answers&&r.answers.meta&&r.answers.meta.audio)||null;
+  if(am==="skip") h+='<span style="color:var(--alert)"><strong>Ses olmadan girdi</strong> — dinleme ve dikte geçersiz</span>';
+  else if(am==="ok") h+='<span>Ses kontrolü: <strong>doğrulandı</strong></span>';
   h+='<span>Boş bırakılan: <strong>'+(r.blanks!=null?r.blanks:"—")+'</strong> soru</span>';
   h+='<span>Süre: <strong>'+(r.minutes!=null?r.minutes+" dk":"—")+'</strong></span>';
   h+='<span>Yazma: <strong>'+(r.words||0)+'</strong> kelime</span>';

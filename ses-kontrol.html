@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ses Kontrolü · İngilizce Seviye Sınavı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#fbfbfc; --surface:#fff; --surface-2:#f3f5f8; --text:#10243a; --text-2:#5b6572; --text-3:#8c96a2;
+  --line:#e6e8ec; --line-2:#d3d8df; --accent:#1b4f9c; --accent-soft:rgba(27,79,156,.09);
+  --ok:#1c7a4a; --ok-soft:rgba(28,122,74,.11);
+  --warn:#8a6100; --warn-soft:rgba(138,97,0,.11);
+  --alert:#c7361f; --alert-soft:rgba(199,54,31,.10);
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --text:#e8edf3; --text-2:#9aa6b4; --text-3:#6d7987;
+  --line:#243040; --line-2:#2f3d4f; --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14);
+  --ok:#5ed394; --ok-soft:rgba(94,211,148,.13);
+  --warn:#e3b341; --warn-soft:rgba(227,179,65,.13);
+  --alert:#ff7f68; --alert-soft:rgba(255,127,104,.13);
+}}
+:root[data-theme="dark"]{
+  --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --text:#e8edf3; --text-2:#9aa6b4; --text-3:#6d7987;
+  --line:#243040; --line-2:#2f3d4f; --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14);
+  --ok:#5ed394; --ok-soft:rgba(94,211,148,.13);
+  --warn:#e3b341; --warn-soft:rgba(227,179,65,.13);
+  --alert:#ff7f68; --alert-soft:rgba(255,127,104,.13);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.55}
+.wrap{max-width:560px;margin:0 auto;padding:40px 16px 56px}
+.kick{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+h1{margin:0 0 10px;font-size:29px;line-height:1.15;font-weight:700;letter-spacing:-.025em}
+.lead{margin:0 0 24px;font-size:16px;color:var(--text-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
+h2{margin:0 0 10px;font-size:17px;font-weight:600;letter-spacing:-.015em}
+p{margin:0 0 12px;font-size:15px}
+p:last-child{margin-bottom:0}
+.fine{font-size:14px;color:var(--text-2)}
+.band{border-left:3px solid var(--warn);background:var(--warn-soft);border-radius:0 10px 10px 0;
+  padding:13px 15px;font-size:14.5px;margin:0 0 16px}
+.band.ok{border-color:var(--ok);background:var(--ok-soft)}
+.band.bad{border-color:var(--alert);background:var(--alert-soft)}
+button{font-family:inherit;font-size:15px;font-weight:600;border-radius:999px;padding:12px 20px;
+  border:1px solid var(--line-2);background:var(--surface);color:var(--text);cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+button.main{background:var(--accent);border-color:var(--accent);color:#fff;width:100%;font-size:16px;padding:15px 20px}
+button.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+button.no{color:var(--alert);border-color:var(--alert)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+ul{margin:10px 0 0;padding-left:20px;font-size:14.5px;line-height:1.75}
+li{margin-bottom:6px}
+.dev{font-size:13.5px;color:var(--text-3);background:var(--surface-2);border-radius:10px;padding:11px 13px;margin-top:4px}
+.dev b{color:var(--text-2);font-weight:600}
+.big{font-size:21px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px}
+.hid{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kick" id="brand">Sarıyer Eğitim Merkezi</p>
+  <h1>Sınav öncesi ses kontrolü</h1>
+  <p class="lead">Seviye sınavının <strong>22 sorusu</strong> dinlemeye dayalıdır. Sınava girmeden
+  önce bu sayfayı açıp sesin geldiğini doğrulayın. Bir dakika sürer.</p>
+
+  <div class="band" id="iosBand" hidden>
+    <strong>iPhone / iPad kullanıyorsunuz.</strong><br>
+    Cihazın sol üst yanındaki <strong>sessiz anahtarını kapatın</strong> — küçük turuncu çizgi
+    görünmemeli. Sessiz moddayken sınavın sesi <strong>hiç duyulmaz</strong> ve ekranda hata da çıkmaz.
+    Sonra yan tuşla ses seviyesini açın.
+  </div>
+
+  <div class="card">
+    <h2>1. Adım — Sesi çalın</h2>
+    <p class="fine">Aşağıdaki düğmeye basın. İngilizce bir cümle duymanız gerekir.</p>
+    <div class="row"><button class="main" id="play">Sesi çal</button></div>
+    <p class="fine" id="state" style="margin-top:12px"></p>
+  </div>
+
+  <div class="card hid" id="askCard">
+    <h2>2. Adım — Duydunuz mu?</h2>
+    <p class="fine">Tarayıcı sesi gönderdi. Gerçekten duyup duymadığınızı yalnızca siz bilebilirsiniz.</p>
+    <div class="row">
+      <button class="yes" id="yes">Evet, net duydum</button>
+      <button class="no"  id="no">Hayır, duymadım</button>
+    </div>
+  </div>
+
+  <div class="card hid" id="okCard">
+    <p class="big" style="color:var(--ok)">Cihazınız hazır.</p>
+    <p class="fine">Sınava bu cihazdan girebilirsiniz. Sınav sırasında sesi kısmayın ve
+    sessiz moda almayın. Kulaklık kullanmanız önerilir.</p>
+  </div>
+
+  <div class="card hid" id="badCard">
+    <p class="big" style="color:var(--alert)">Ses gelmiyor.</p>
+    <p class="fine">Sırayla şunları deneyin, her denemeden sonra yukarıdaki düğmeye tekrar basın:</p>
+    <ul id="fixList"></ul>
+    <div class="row">
+      <button class="main" id="again">Tekrar dene</button>
+    </div>
+    <p class="fine" style="margin-top:14px">Hiçbiri işe yaramadıysa bu sayfanın en altındaki
+    cihaz bilgisini kursa iletin, size başka bir yol gösterelim.</p>
+  </div>
+
+  <div class="card">
+    <h2>Cihaz bilgisi</h2>
+    <p class="fine" style="margin-bottom:8px">Sorun yaşarsanız bu satırı kursa gönderin.</p>
+    <div class="dev" id="dev">—</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* --- cihaz tespiti --- */
+  var ua = navigator.userAgent || "";
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && (navigator.maxTouchPoints||0) > 1);
+  var isAndroid = /Android/.test(ua);
+  var isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(ua);
+  var cihaz = isIOS ? (/iPad/.test(ua) || (/Macintosh/.test(ua)&&navigator.maxTouchPoints>1) ? "iPad" : "iPhone")
+            : isAndroid ? "Android"
+            : /Windows/.test(ua) ? "Windows"
+            : /Mac/.test(ua) ? "Mac" : "Bilinmiyor";
+  var tarayici = /CriOS|Chrome/.test(ua) ? "Chrome" : isSafari ? "Safari"
+               : /Firefox|FxiOS/.test(ua) ? "Firefox" : /Edg/.test(ua) ? "Edge" : "Diğer";
+
+  if (isIOS) $("iosBand").hidden = false;
+
+  /* --- çözüm listesi cihaza göre --- */
+  var fixes = [];
+  if (isIOS){
+    fixes.push("<strong>Sessiz anahtarını kapatın</strong> — cihazın sol üst yanındaki küçük düğme. Turuncu çizgi görünüyorsa sessizdesiniz.");
+    fixes.push("Yan tuşla ses seviyesini sonuna kadar açın.");
+    fixes.push("Kulaklık takılıysa çıkarın; AirPods başka bir cihaza bağlı olabilir.");
+    fixes.push("Denetim Merkezi'ni açıp <strong>Sessiz/Odaklanma</strong> kapalı mı bakın.");
+    if (isSafari) fixes.push("Safari yerine <strong>Chrome</strong> ile açmayı deneyin — Chrome sessiz anahtarını dinlemez.");
+  } else if (isAndroid){
+    fixes.push("Ses tuşuyla <strong>medya sesini</strong> açın (zil sesi değil, medya).");
+    fixes.push("Bluetooth kulaklık bağlıysa ayırın.");
+    fixes.push("Ayarlar → Erişilebilirlik → <strong>Metin okuma</strong> bölümünde İngilizce dil paketinin kurulu olduğundan emin olun.");
+    fixes.push("Sayfayı <strong>Chrome</strong> ile açın.");
+  } else {
+    fixes.push("Görev çubuğundaki hoparlör simgesinden sesi açın.");
+    fixes.push("Kulaklık/hoparlör doğru çıkış cihazı olarak seçili mi kontrol edin.");
+    fixes.push("Sekme sessize alınmış olabilir — sekmeye sağ tıklayıp <strong>Sesi aç</strong> deyin.");
+    fixes.push("Chrome veya Edge ile açmayı deneyin.");
+  }
+  $("fixList").innerHTML = "<li>" + fixes.join("</li><li>") + "</li>";
+
+  /* --- ses çalma: önce MP3, yoksa tarayıcı sesi --- */
+  var CUMLE = "This is a sound check. If you can hear this sentence clearly, you are ready to begin.";
+  var MP3 = "audio/ses-testi.mp3";
+  var kaynak = "—", busy = false;
+
+  function durum(t){ $("state").innerHTML = t; }
+  function sor(){ $("askCard").classList.remove("hid"); $("okCard").classList.add("hid"); $("badCard").classList.add("hid"); }
+  function basarisiz(mesaj){
+    durum("<span style='color:var(--alert)'>" + mesaj + "</span>");
+    $("askCard").classList.add("hid"); $("okCard").classList.add("hid");
+    $("badCard").classList.remove("hid");
+    yazDev();
+  }
+
+  function calTTS(){
+    if (!window.speechSynthesis){ basarisiz("Bu tarayıcı ses üretemiyor."); busy=false; $("play").disabled=false; return; }
+    kaynak = "tarayıcı sesi";
+    var basladi = false, bitti = false, tick = Date.now(), keep = null;
+    function kapat(ok){
+      if (bitti) return; bitti = true;
+      if (keep){ clearInterval(keep); keep = null; }
+      busy = false; $("play").disabled = false;
+      if (ok){ durum("Cümle çalındı."); sor(); }
+      else basarisiz("Ses başlatılamadı — cihazda İngilizce konuşma desteği bulunamadı.");
+      yazDev();
+    }
+    var sesler = [];
+    try { sesler = speechSynthesis.getVoices() || []; } catch(e){}
+    var en = sesler.filter(function(v){ return /^en[-_]/i.test(v.lang||""); });
+    var u = new SpeechSynthesisUtterance(CUMLE);
+    window.__tut = u;                       /* çöp toplanmasın */
+    try { if (en[0]) u.voice = en[0]; } catch(e){}
+    u.lang = String((en[0] && en[0].lang) || "en-GB").replace(/_/g,"-");
+    u.rate = 0.95;
+    u.onstart = function(){ basladi = true; tick = Date.now(); };
+    u.onend   = function(){ kapat(true); };
+    u.onerror = function(){ kapat(basladi); };
+    keep = setInterval(function(){
+      try{
+        if (speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume();
+        if (speechSynthesis.speaking || speechSynthesis.pending) tick = Date.now();
+      }catch(e){}
+      if (Date.now() - tick > 3500) kapat(basladi);
+    }, 800);
+    try { speechSynthesis.cancel(); } catch(e){}
+    try { speechSynthesis.speak(u); } catch(e){ kapat(false); }
+  }
+
+  function cal(){
+    if (busy) return;
+    busy = true; $("play").disabled = true;
+    durum("Çalıyor…");
+    $("askCard").classList.add("hid"); $("okCard").classList.add("hid"); $("badCard").classList.add("hid");
+
+    var a = new Audio(MP3);
+    var karar = false;
+    function mp3Olmadi(){ if (karar) return; karar = true; try{ a.pause(); }catch(e){} calTTS(); }
+    a.onerror = mp3Olmadi;
+    a.onplaying = function(){
+      if (karar) return; karar = true; kaynak = "MP3 kaydı";
+    };
+    a.onended = function(){
+      if (kaynak !== "MP3 kaydı") return;
+      busy = false; $("play").disabled = false; durum("Kayıt çalındı."); sor(); yazDev();
+    };
+    var p = a.play();
+    if (p && p.catch) p.catch(mp3Olmadi);
+    setTimeout(function(){ if (!karar) mp3Olmadi(); }, 2500);
+  }
+
+  function yazDev(){
+    $("dev").innerHTML =
+      "<b>Cihaz:</b> " + cihaz + " &nbsp;·&nbsp; <b>Tarayıcı:</b> " + tarayici +
+      " &nbsp;·&nbsp; <b>Ses kaynağı:</b> " + kaynak +
+      "<br><b>Tarih:</b> " + new Date().toLocaleString("tr-TR");
+  }
+  yazDev();
+
+  $("play").addEventListener("click", cal);
+  $("again").addEventListener("click", function(){ cal(); window.scrollTo(0,0); });
+  $("yes").addEventListener("click", function(){
+    $("askCard").classList.add("hid"); $("badCard").classList.add("hid");
+    $("okCard").classList.remove("hid");
+    durum("<span style='color:var(--ok)'>Ses doğrulandı.</span>");
+  });
+  $("no").addEventListener("click", function(){
+    $("askCard").classList.add("hid");
+    basarisiz("Ses duyulmadı.");
+  });
+
+  /* kurum adı config.js'ten gelsin (varsa) */
+  try{
+    var s = document.createElement("script");
+    s.src = "config.js";
+    s.onload = function(){
+      if (window.STQ_CONFIG && window.STQ_CONFIG.SCHOOL_NAME)
+        $("brand").textContent = window.STQ_CONFIG.SCHOOL_NAME;
+    };
+    document.head.appendChild(s);
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
