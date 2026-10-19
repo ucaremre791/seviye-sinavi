@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>İngilizce Seviye Tespit Sonucu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#fbfbfc; --surface:#fff; --surface-2:#f3f5f8; --text:#10243a; --text-2:#5b6572; --text-3:#8c96a2;
+  --line:#e6e8ec; --accent:#1b4f9c; --accent-soft:rgba(27,79,156,.09); --r:16px;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --text:#e8edf3; --text-2:#9aa6b4; --text-3:#6d7987;
+  --line:#243040; --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0b1016; --surface:#141b24; --surface-2:#1b242f; --text:#e8edf3; --text-2:#9aa6b4; --text-3:#6d7987;
+  --line:#243040; --accent:#7ba7e5; --accent-soft:rgba(123,167,229,.14); color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.6;
+  font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin:0 auto;padding:36px 18px 56px}
+.org{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 7px}
+h1{margin:0 0 4px;font-size:25px;line-height:1.2;font-weight:700;letter-spacing:-.025em}
+.who{margin:0 0 24px;font-size:15px;color:var(--text-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px 20px;margin-bottom:16px}
+.lab{font-size:14px;color:var(--text-2);text-align:center;margin:0 0 2px}
+.lvl{font-size:46px;font-weight:700;letter-spacing:-.04em;text-align:center;line-height:1.08;margin:0}
+.lvl.two{font-size:38px}
+.desc{font-size:15px;color:var(--text-2);text-align:center;margin:4px 0 0}
+.scaleWrap{position:relative;padding-top:22px;margin:22px 0 0}
+.track{display:flex;gap:3px;height:10px}
+.track i{flex:1;background:var(--accent);border-radius:3px}
+.track i:nth-child(1){opacity:.22;border-radius:5px 3px 3px 5px}
+.track i:nth-child(2){opacity:.44}
+.track i:nth-child(3){opacity:.70;border-radius:3px 5px 5px 3px}
+.pin{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+.pin b{display:block;width:11px;height:11px;border-radius:50%;background:var(--text)}
+.pin i{display:block;width:2px;height:9px;background:var(--text)}
+.marks{display:flex;gap:3px;margin-top:8px}
+.marks span{flex:1;text-align:center;font-size:12px;font-weight:600;color:var(--text-2)}
+.marks span.on{color:var(--accent)}
+.score{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--line);
+  font-size:15px;color:var(--text-2);text-align:center}
+.score strong{color:var(--text)}
+h2{margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--text-2)}
+.sk{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.sk:first-of-type{border-top:0}
+.sk .n{width:116px;flex:none}
+.sk .t{flex:1;min-width:0;height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.sk .t i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.sk .v{width:46px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+ul{margin:0;padding-left:20px;font-size:15px;line-height:1.7}
+li{margin-bottom:7px}
+li:last-child{margin-bottom:0}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);
+  border-radius:0 12px 12px 0;padding:14px 16px;font-size:15px;white-space:pre-wrap}
+.foot{font-size:13.5px;color:var(--text-3);line-height:1.65;text-align:center;margin-top:8px}
+.err{text-align:center;padding:48px 10px;color:var(--text-2)}
+.err h1{margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="err" id="err">
+    <h1>Sonuç bulunamadı</h1>
+    <p>Bağlantı eksik ya da bozuk görünüyor. Size gönderilen bağlantıyı
+    tam olarak kopyalayıp tekrar deneyin.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var GRADES    = ["A1", "A1 – A2", "A2", "A2 – B1", "B1"];
+  var GRADEDESC = ["Başlangıç", "Başlangıç ile temel arası", "Temel",
+                   "Temel ile orta arası", "Orta"];
+  var GRADESEG  = [[0],[0,1],[1],[1,2],[2]];
+  var CANDO = {
+   0:["Kendini tanıtabilir, nereli olduğunu ve ne yaptığını söyleyebilirsin.",
+      "Sayıları, saatleri ve günlük eşyaların adlarını anlayabilirsin.",
+      "Çok kısa ve basit cümlelerle yazabilirsin."],
+   1:["Kendini ve yakın çevreni basit cümlelerle tanıtabilirsin.",
+      "Yavaş ve net konuşulduğunda tanıdık kelimeleri yakalayabilirsin.",
+      "Kısa mesaj ve tabelaların ne dediğini çıkarabilirsin."],
+   2:["Ailen, işin ve çevren hakkında basit cümlelerle konuşabilirsin.",
+      "Kısa ilanları, mesajları ve e-postaları anlayabilirsin.",
+      "Alışveriş, yol sorma gibi günlük durumlarda anlaşabilirsin."],
+   3:["Tanıdık konulardaki konuşmaların ana hattını takip edebilirsin.",
+      "Günlük metinlerde aradığın bilgiyi bulabilirsin.",
+      "Geçmiş ve gelecek planlarını basit cümlelerle anlatabilirsin."],
+   4:["Tanıdık konularda kesintisiz konuşmayı takip edebilirsin.",
+      "Bir metnin ana fikrini ve detaylarını yakalayabilirsin.",
+      "Deneyimlerini ve planlarını bağlantılı cümlelerle anlatabilirsin."]
+  };
+  var SEC = ["Dil kullanımı","Okuma","Dinleme"];
+
+  function esc(s){ return String(s==null?"":s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function decode(){
+    var raw = (location.hash||"").replace(/^#/,"");
+    if(!raw) return null;
+    try{
+      var b = raw.replace(/-/g,"+").replace(/_/g,"/");
+      while(b.length % 4) b += "=";
+      return JSON.parse(decodeURIComponent(atob(b)));
+    }catch(e){ return null; }
+  }
+
+  var d = decode();
+  if(!d || typeof d.g !== "number" || d.g < 0 || d.g > 4) return;   /* hata ekranı kalsın */
+
+  var g = d.g;
+  var pos = Math.max(1.5, Math.min(98.5, Number(d.p) || 50));
+  var h = "";
+
+  h += '<p class="org">' + esc(d.o || "Sarıyer Eğitim Merkezi") + '</p>';
+  h += '<h1>İngilizce Seviye Tespit Sonucu</h1>';
+  h += '<p class="who">' + esc(d.n || "") + (d.d ? ' · ' + esc(d.d) : '') + '</p>';
+
+  h += '<div class="card">';
+  h +=   '<p class="lab">Seviyeniz</p>';
+  h +=   '<p class="lvl' + (GRADES[g].length > 3 ? ' two' : '') + '">' + GRADES[g] + '</p>';
+  h +=   '<p class="desc">' + GRADEDESC[g] + '</p>';
+  h +=   '<div class="scaleWrap"><div class="pin" style="left:' + pos.toFixed(1) + '%"><b></b><i></i></div>' +
+         '<div class="track"><i></i><i></i><i></i></div><div class="marks">' +
+         ["A1","A2","B1"].map(function(t,i){
+           return '<span' + (GRADESEG[g].indexOf(i) >= 0 ? ' class="on"' : '') + '>' + t + '</span>';
+         }).join('') + '</div></div>';
+  if(d.a != null){
+    h += '<p class="score">Test bölümü <strong>' + esc(d.a) + ' / 80</strong>' +
+         (d.w != null ? ' · Yazma <strong>' + esc(d.w) + ' / 20</strong> · Toplam <strong>' +
+                        (Number(d.a) + Number(d.w)) + ' / 100</strong>' : '') + '</p>';
+  }
+  h += '</div>';
+
+  if(Array.isArray(d.s) && d.s.length === 3){
+    h += '<div class="card"><h2>Bölüm sonuçların</h2>';
+    d.s.forEach(function(v, i){
+      var pc = Math.max(0, Math.min(100, Number(v) || 0));
+      h += '<div class="sk"><span class="n">' + SEC[i] + '</span>' +
+           '<span class="t"><i style="width:' + pc + '%"></i></span>' +
+           '<span class="v">%' + pc + '</span></div>';
+    });
+    h += '</div>';
+  }
+
+  h += '<div class="card"><h2>Bu seviyede neler yapabilirsin</h2><ul><li>' +
+       CANDO[g].map(esc).join('</li><li>') + '</li></ul></div>';
+
+  if(d.t){
+    h += '<div class="card"><h2>Öğretmen notu</h2><div class="note">' + esc(d.t) + '</div></div>';
+  }
+
+  h += '<p class="foot">Bu bir yerleştirme sınavıdır; geçme veya kalma yoktur. ' +
+       'Amacı seni doğru kurda başlatmaktır.' + (d.c ? '<br>' + esc(d.c) : '') + '</p>';
+
+  document.getElementById("wrap").innerHTML = h;
+  document.title = (d.n ? d.n + " · " : "") + "İngilizce Seviye Sonucu";
+})();
+</script>
+</body>
+</html>

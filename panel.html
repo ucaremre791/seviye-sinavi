@@ -629,6 +629,39 @@ function waLink(r){
             "sonucu hazır. Uygun olduğunuzda kısaca görüşebilir miyiz?";
   return "https://wa.me/"+n+"?text="+encodeURIComponent(msg);
 }
+/* Sonucu bağlantının içine gömer. Veri adresin # kısmında durur, sunucuya hiç
+   gitmez; sayfa açılınca tarayıcıda çözülüp çizilir. Böylece veritabanına
+   okuma izni vermemize gerek kalmıyor. */
+function b64u(s){
+  return btoa(encodeURIComponent(s)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function sonucURL(r, not){
+  var ts = r.answers ? topicStats(r) : null;
+  var d = {
+    o: CFG.SCHOOL_NAME || "Sarıyer Eğitim Merkezi",
+    n: r.name || "",
+    d: fmtDatePlain(r.created_at),
+    g: gradeOf(r),
+    p: Math.round(barPos(r)*10)/10,
+    a: r.auto
+  };
+  if(marked(r)) d.w = r.writing;
+  if(ts) d.s = REPSEC.map(function(x){ return skillPct(ts, x[1]); });
+  if(not) d.t = not;
+  if(CFG.CONTACT_LINE) d.c = CFG.CONTACT_LINE;
+  var taban = location.href.split("#")[0].split("?")[0].replace(/[^\/]*$/,"") + "sonuc.html";
+  return taban + "#" + b64u(JSON.stringify(d));
+}
+function sonucWA(r, not){
+  var n = waNumber(r.phone); if(!n) return null;
+  var ad  = String(r.name||"").trim().split(/\s+/)[0] || "";
+  var org = (CFG.SCHOOL_NAME||"Sarıyer Eğitim Merkezi");
+  var msg = "Merhaba "+ad+", "+org+" İngilizce seviye tespit sınavı sonucunuz hazır.\n\n"+
+            "Seviyeniz: *"+GRADES[gradeOf(r)]+"*\n\n"+
+            "Ayrıntılı sonucunuzu buradan görebilirsiniz:\n"+sonucURL(r, not);
+  return "https://wa.me/"+n+"?text="+encodeURIComponent(msg);
+}
+
 function eduOf(r){ return (r.answers&&r.answers.meta&&r.answers.meta.edu)||""; }
 
 function audioSkipped(r){ return !!(r.answers&&r.answers.meta&&r.answers.meta.audio==="skip"); }
@@ -912,22 +945,46 @@ function reportHtml(r){
   return h;
 }
 
+var PAGETITLE = document.title;   /* başlık, rapor kapanınca geri alınır */
+var REPROW = null;
+function repNot(){
+  var el = document.querySelector("#repSheet .repNote");
+  return el ? (el.innerText||"").trim() : "";
+}
+function tazeleWA(){
+  var a = $("repWA"); if(!a) return;
+  var wa = REPROW ? sonucWA(REPROW, repNot()) : null;
+  if(wa){ a.href = wa; a.hidden = false; } else { a.hidden = true; }
+}
 function openReport(r){
   $("repSheet").innerHTML = reportHtml(r);
   $("rep").hidden = false;
   document.body.style.overflow = "hidden";
   /* kaydedilen PDF bu adla iner */
   document.title = r.name + " - Seviye Sonucu";
+  REPROW = r;
+  $("repHint").textContent = "Öğretmen notunu yazarsanız gönderilen sonuca o da eklenir.";
+  tazeleWA();
+  var nt = document.querySelector("#repSheet .repNote");
+  if(nt) nt.addEventListener("input", tazeleWA);
 }
 function closeReport(){
   $("rep").hidden = true;
   document.body.style.overflow = "";
   document.title = PAGETITLE;
+  REPROW = null;
 }
 document.addEventListener("click",function(ev){
   var t=ev.target;
   if(t&&t.id==="repClose"){ closeReport(); }
   if(t&&t.id==="repPrint"){ window.print(); }
+  if(t&&t.id==="repCopy" && REPROW){
+    var url = sonucURL(REPROW, repNot());
+    var bitti = function(){ $("repHint").innerHTML = "<strong style='color:var(--ok)'>Bağlantı kopyalandı.</strong> İstediğiniz yere yapıştırabilirsiniz."; };
+    if(navigator.clipboard && navigator.clipboard.writeText)
+      navigator.clipboard.writeText(url).then(bitti, function(){ window.prompt("Bağlantıyı kopyalayın:", url); });
+    else window.prompt("Bağlantıyı kopyalayın:", url);
+  }
 });
 document.addEventListener("keydown",function(ev){
   if(ev.key==="Escape" && !$("rep").hidden){ closeReport(); }
@@ -1105,9 +1162,12 @@ $("btnCsv").addEventListener("click",function(){
 </script>
 <div class="repWrap" id="rep" hidden>
   <div class="repBar">
+    <a class="tiny wa" id="repWA" href="#" target="_blank" rel="noopener"
+       style="width:auto;padding:0 15px;font-weight:600;text-decoration:none">WhatsApp'tan gönder</a>
+    <button class="tiny" type="button" id="repCopy">Bağlantıyı kopyala</button>
     <button class="tiny" type="button" id="repPrint">Yazdır / PDF</button>
     <button class="tiny" type="button" id="repClose">Kapat</button>
-    <span class="repHint">Yazdır'a basıp hedef olarak <strong>PDF olarak kaydet</strong>'i seçin.</span>
+    <span class="repHint" id="repHint">Öğretmen notunu yazarsanız gönderilen sonuca o da eklenir.</span>
   </div>
   <div class="repSheet" id="repSheet"></div>
 </div>
