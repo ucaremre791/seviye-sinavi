@@ -195,6 +195,13 @@
   .gn{font-size:11px;color:var(--accent);font-weight:700;vertical-align:super;margin:0 2px 0 1px}
   .dictrow{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
 
+  .field select{width:100%;font-family:inherit;font-size:16px;color:var(--text);
+    background:var(--surface);border:1px solid var(--line-2);border-radius:10px;
+    padding:12px 13px;-webkit-appearance:none;appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,var(--text-2) 50%),linear-gradient(135deg,var(--text-2) 50%,transparent 50%);
+    background-position:calc(100% - 19px) calc(50% + 1px),calc(100% - 14px) calc(50% + 1px);
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+  .field select:focus{outline:2px solid var(--accent);outline-offset:1px}
   .warnline{border-left:3px solid var(--warn);background:rgba(138,97,0,.10);
     border-radius:0 var(--r-md) var(--r-md) 0;padding:12px 15px;font-size:14.5px;line-height:1.55;margin-bottom:14px}
   @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .warnline{background:rgba(227,179,65,.12)} }
@@ -330,7 +337,17 @@
         <input type="email" id="fMail" autocomplete="email" placeholder="ornek@eposta.com">
       </div>
     </div>
-    <p class="fine" style="margin:0 0 4px">Ad ve telefon zorunludur — sınav sonucunuz için sizinle iletişime geçeceğiz.</p>
+    <div class="field">
+      <label for="fEdu">Eğitim durumu</label>
+      <select id="fEdu">
+        <option value="">Seçiniz…</option>
+        <option value="Ortaokul">Ortaokul (6, 7, 8. sınıf)</option>
+        <option value="Lise">Lise</option>
+        <option value="Üniversite">Üniversite öğrencisi</option>
+        <option value="Yetişkin">Yetişkin / çalışan</option>
+      </select>
+    </div>
+    <p class="fine" style="margin:0 0 4px">Ad, telefon ve eğitim durumu zorunludur — sizi doğru gruba yerleştirebilmemiz için gerekli.</p>
     <div class="field">
       <label for="fGroup">Grup / kayıt kodu <span style="color:var(--text-3)">(isteğe bağlı)</span></label>
       <input type="text" id="fGroup" placeholder="Örn. 2026-Güz">
@@ -728,7 +745,7 @@ var KEY = unlock(KEYBLOB);
 var SKEY = "stq2026.state", OUTBOX = "stq2026.outbox";
 var CFG = window.STQ_CONFIG || {};
 function blank(){
-  return {name:"",phone:"",mail:"",group:"",started:0,part:-1,ends:0, audio:null,
+  return {name:"",phone:"",mail:"",group:"",started:0,part:-1,ends:0, audio:null, edu:"",
           a:{p1:{},p2:{},p3:{},p4:{},p5:{}}, writing:"", plays:{}, done:false};
 }
 var ST = blank();
@@ -1408,7 +1425,7 @@ function finish(){
     mins: ST.started ? Math.round((Date.now()-ST.started)/60000) : null,
     s:r.s, lv:r.lv, blanks:r.blanks, auto:auto, writing:null,
     answers:{p1:ST.a.p1,p2:ST.a.p2,p3:ST.a.p3,p4:ST.a.p4,p5:ST.a.p5,
-             meta:{audio: ST.audio || "ok"}},
+             meta:{audio: ST.audio || "ok", edu: ST.edu || ""}},
     words: wtxt ? wtxt.split(/\s+/).length : 0, text:wtxt
   };
   var sc = scaleOf(false, auto, null);
@@ -1511,10 +1528,12 @@ $("btnStart").addEventListener("click",function(){
   if(n.length<3){ $("fName").focus(); toast("Lütfen ad ve soyadınızı yazın."); return; }
   var tel=$("fPhone").value.trim();
   if(tel.replace(/\D/g,"").length<10){ $("fPhone").focus(); toast("Lütfen telefon numaranızı yazın — sonucunuz için gerekli."); return; }
+  var edu=$("fEdu").value;
+  if(!edu){ $("fEdu").focus(); toast("Lütfen eğitim durumunuzu seçin."); return; }
   if(AUDIO_OK===null){ toast("Başlamadan önce ses kontrolünü yapın."); $("btnTest").focus(); return; }
   primeAudio();
   ST=blank();
-  ST.audio=AUDIO_OK;
+  ST.audio=AUDIO_OK; ST.edu=edu;
   ST.name=n; ST.phone=$("fPhone").value.trim(); ST.mail=$("fMail").value.trim(); ST.group=$("fGroup").value.trim();
   ST.started=Date.now();
   startPart(0);
