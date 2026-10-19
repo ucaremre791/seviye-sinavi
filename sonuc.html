@@ -74,8 +74,10 @@ li:last-child{margin-bottom:0}
   </div>
 </div>
 
+<script src="config.js"></script>
 <script>
 (function(){
+  var CFG = (window.STQ_CONFIG||{});
   var GRADES    = ["A1", "A1 – A2", "A2", "A2 – B1", "B1"];
   var GRADEDESC = ["Başlangıç", "Başlangıç ile temel arası", "Temel",
                    "Temel ile orta arası", "Orta"];
@@ -102,14 +104,41 @@ li:last-child{margin-bottom:0}
   function esc(s){ return String(s==null?"":s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
+  /* Bağlantı iki biçimi de kabul eder: yeni sıralı dizi ve eski anahtarlı nesne. */
   function decode(){
     var raw = (location.hash||"").replace(/^#/,"");
     if(!raw) return null;
+    var v, bin;
     try{
       var b = raw.replace(/-/g,"+").replace(/_/g,"/");
       while(b.length % 4) b += "=";
-      return JSON.parse(decodeURIComponent(atob(b)));
+      bin = atob(b);
     }catch(e){ return null; }
+    try{                                   /* yeni biçim: düz UTF-8 */
+      var bay = new Uint8Array(bin.length);
+      for(var i=0;i<bin.length;i++) bay[i] = bin.charCodeAt(i);
+      v = JSON.parse(new TextDecoder().decode(bay));
+    }catch(e1){
+      try{ v = JSON.parse(decodeURIComponent(bin)); }   /* eski bağlantılar */
+      catch(e2){ return null; }
+    }
+
+    if(v && !Array.isArray(v) && typeof v === "object") return v;   /* eski biçim */
+    if(!Array.isArray(v) || v.length < 5) return null;
+
+    var ks = String(v[1]||"");
+    var tarih = /^\d{6}$/.test(ks)
+      ? ks.slice(4,6) + "." + ks.slice(2,4) + ".20" + ks.slice(0,2)
+      : ks;
+    var s = [v[6], v[7], v[8]].filter(function(x){ return typeof x === "number"; });
+    return {
+      n: v[0], d: tarih, g: v[2], p: v[3], a: v[4],
+      w: (v[5] === null || v[5] === undefined) ? null : v[5],
+      s: s.length === 3 ? s : null,
+      t: v[9] || "",
+      o: CFG.SCHOOL_NAME || "Sarıyer Eğitim Merkezi",
+      c: CFG.CONTACT_LINE || ""
+    };
   }
 
   var d = decode();
@@ -124,7 +153,8 @@ li:last-child{margin-bottom:0}
   h += '<p class="who">' + esc(d.n || "") + (d.d ? ' · ' + esc(d.d) : '') + '</p>';
 
   h += '<div class="card">';
-  h +=   '<p class="lab">Seviyeniz</p>';
+  var kesin = (d.w !== null && d.w !== undefined);
+  h +=   '<p class="lab">' + (kesin ? 'Seviyeniz' : 'Ön seviyeniz') + '</p>';
   h +=   '<p class="lvl' + (GRADES[g].length > 3 ? ' two' : '') + '">' + GRADES[g] + '</p>';
   h +=   '<p class="desc">' + GRADEDESC[g] + '</p>';
   h +=   '<div class="scaleWrap"><div class="pin" style="left:' + pos.toFixed(1) + '%"><b></b><i></i></div>' +
@@ -157,6 +187,10 @@ li:last-child{margin-bottom:0}
     h += '<div class="card"><h2>Öğretmen notu</h2><div class="note">' + esc(d.t) + '</div></div>';
   }
 
+  if(!kesin){
+    h += '<div class="card"><div class="note"><strong>Bu bir ön sonuçtur.</strong> Yazma bölümünüz ' +
+         'öğretmenimiz tarafından değerlendirilecek ve kesin seviyeniz sizinle paylaşılacaktır.</div></div>';
+  }
   h += '<p class="foot">Bu bir yerleştirme sınavıdır; geçme veya kalma yoktur. ' +
        'Amacı seni doğru kurda başlatmaktır.' + (d.c ? '<br>' + esc(d.c) : '') + '</p>';
 
